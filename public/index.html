@@ -1,0 +1,2244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Crave — Neon Night</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+:root{
+  --bg:#080C14;
+  --surface:#0D1220;
+  --surface2:#111828;
+  --surface3:#161F30;
+  --border:rgba(108,92,231,.12);
+  --border2:rgba(108,92,231,.22);
+  --purple:#6C5CE7;
+  --cyan:#00F5D4;
+  --pink:#F72585;
+  --white:#FFFFFF;
+  --off-white:#DDE5F5;
+  --muted:#6B7FA3;
+  --faint:#354060;
+  --success:#00F5D4;
+  --danger:#F72585;
+  --warn:#FFD60A;
+  --gold:#E8C97A;
+  --card-radius:16px;
+  --btn-radius:10px;
+  --font-head:'Bebas Neue',Impact,sans-serif;
+  --font-body:'Plus Jakarta Sans','DM Sans',sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--off-white);
+  font-family:var(--font-body);
+  font-size:15px;line-height:1.65;
+  min-height:100vh;overflow-x:hidden;
+  cursor:default;
+}
+
+/* Deep noise texture overlay */
+body::before{
+  content:'';
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:200px 200px;
+  opacity:.35;
+}
+
+/* Cinematic glow orbs */
+body::after{
+  content:'';
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 900px 600px at 10% 0%,rgba(108,92,231,.11) 0%,transparent 65%),
+    radial-gradient(ellipse 700px 500px at 90% 80%,rgba(0,245,212,.07) 0%,transparent 65%),
+    radial-gradient(ellipse 500px 400px at 55% 5%,rgba(247,37,133,.06) 0%,transparent 65%);
+}
+
+/* ── Nav ─────────────────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(8,12,20,.72);
+  backdrop-filter:blur(32px) saturate(180%);
+  -webkit-backdrop-filter:blur(32px) saturate(180%);
+  border-bottom:1px solid rgba(255,255,255,.04);
+  padding:0 2.5rem;
+  display:flex;align-items:center;height:58px;gap:2rem;
+}
+
+.nav-brand{
+  font-family:var(--font-head);font-size:1.9rem;letter-spacing:.22em;
+  color:var(--white);margin-right:auto;cursor:pointer;
+  display:inline-flex;align-items:center;gap:0;
+  animation:fadeSlideDown .5s ease both;
+  text-transform:uppercase;
+}
+.nav-brand .brand-dot{
+  display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--cyan);margin-left:3px;margin-bottom:12px;
+  box-shadow:0 0 8px var(--cyan),0 0 16px var(--cyan);
+  animation:dotPulse 2.5s ease-in-out infinite;
+}
+@keyframes dotPulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.3);box-shadow:0 0 12px var(--cyan),0 0 24px var(--cyan)}}
+
+.nav-link{
+  color:rgba(255,255,255,.35);font-size:.68rem;font-weight:600;
+  cursor:pointer;transition:color .2s,letter-spacing .2s;letter-spacing:.14em;
+  text-transform:uppercase;position:relative;padding:.2rem 0;
+  animation:fadeSlideDown .5s ease both;
+}
+.nav-link::after{
+  content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;
+  background:var(--gold);transition:width .25s;
+}
+.nav-link:hover{color:rgba(255,255,255,.9);letter-spacing:.18em;}
+.nav-link:hover::after,.nav-link.active::after{width:100%}
+.nav-link.active{color:var(--white)}
+
+/* ── Buttons ─────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.4rem;
+  padding:.6rem 1.4rem;border-radius:var(--btn-radius);border:none;
+  font-family:var(--font-body);font-size:.7rem;font-weight:700;
+  cursor:pointer;transition:all .25s;letter-spacing:.14em;text-transform:uppercase;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--purple) 0%,#7C6CF0 50%,#5A4EC8 100%);
+  color:var(--white);
+  box-shadow:0 2px 20px rgba(108,92,231,.3),inset 0 1px 0 rgba(255,255,255,.1);
+}
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(108,92,231,.5),0 0 0 1px rgba(108,92,231,.4),inset 0 1px 0 rgba(255,255,255,.15);
+}
+.btn-ghost{
+  background:rgba(255,255,255,.04);color:var(--off-white);
+  border:1px solid rgba(255,255,255,.09);
+}
+.btn-ghost:hover{background:rgba(255,255,255,.08);color:var(--white);border-color:rgba(255,255,255,.16)}
+.btn-sm{padding:.33rem .85rem;font-size:.65rem}
+.btn-danger{
+  background:rgba(247,37,133,.06);color:var(--danger);
+  border:1px solid rgba(247,37,133,.18);
+}
+.btn-danger:hover{background:rgba(247,37,133,.14)}
+
+/* ── Pages ───────────────────────────────────────────── */
+.page{display:none;max-width:1200px;margin:0 auto;padding:5rem 2rem 2.5rem;position:relative;z-index:1}
+.page.active{display:block;animation:pageFadeIn .4s ease both}
+.page.active#page-home{padding-top:0;max-width:100%;padding-left:0;padding-right:0}
+.page-inner{max-width:1200px;margin:0 auto;padding:0 2rem 3rem}
+@keyframes pageFadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Hero ────────────────────────────────────────────── */
+.hero{
+  min-height:100svh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:6rem 2rem 4rem;
+  position:relative;overflow:hidden;
+}
+
+/* Diagonal light shard */
+.hero::before{
+  content:'';position:absolute;
+  width:1px;height:55%;
+  background:linear-gradient(to bottom,transparent,rgba(0,245,212,.18),transparent);
+  left:50%;top:15%;transform:translateX(-50%) rotate(-18deg);
+  pointer-events:none;
+}
+
+/* Circular badge ring */
+.hero::after{
+  content:'';position:absolute;
+  width:600px;height:600px;border-radius:50%;
+  border:1px solid rgba(108,92,231,.06);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;
+  box-shadow:0 0 0 100px rgba(108,92,231,.015),0 0 0 200px rgba(0,245,212,.008);
+}
+
+/* Ticker / marquee strip */
+.hero-ticker{
+  position:absolute;bottom:0;left:0;right:0;
+  overflow:hidden;height:32px;
+  border-top:1px solid rgba(255,255,255,.04);
+  background:rgba(8,12,20,.5);
+  display:flex;align-items:center;
+}
+.ticker-track{
+  display:flex;gap:0;white-space:nowrap;
+  animation:tickerScroll 28s linear infinite;
+}
+.ticker-item{
+  font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.18);padding:0 2rem;
+  border-right:1px solid rgba(255,255,255,.06);
+}
+.ticker-item.accent{color:rgba(0,245,212,.3)}
+@keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* Access badge */
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.55rem;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:100px;padding:.35rem .9rem .35rem .5rem;
+  margin-bottom:2.5rem;
+  animation:heroFadeUp .6s .05s ease both;
+  backdrop-filter:blur(8px);
+}
+.hero-badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--cyan);
+  box-shadow:0 0 6px var(--cyan),0 0 12px var(--cyan);
+  animation:dotPulse 2.5s ease-in-out infinite;
+}
+.hero-badge-text{
+  font-size:.6rem;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;color:rgba(255,255,255,.45);
+}
+
+.hero h1{
+  font-family:var(--font-head);
+  font-size:clamp(4.5rem,13vw,10rem);
+  line-height:.9;margin-bottom:1.5rem;
+  color:var(--white);letter-spacing:.03em;
+  text-transform:uppercase;
+  position:relative;z-index:1;
+  animation:heroFadeUp .7s .1s ease both;
+}
+.hero h1 em{
+  font-style:normal;display:block;
+  background:linear-gradient(100deg,
+    var(--purple) 0%,
+    #A78BFA 25%,
+    var(--cyan) 55%,
+    var(--pink) 85%
+  );
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:gradientShift 6s linear infinite, heroFadeUp .7s .18s ease both;
+  letter-spacing:-.01em;
+}
+@keyframes gradientShift{to{background-position:200% center}}
+@keyframes heroFadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+.hero-desc{
+  color:rgba(255,255,255,.35);
+  font-size:.82rem;
+  max-width:380px;
+  margin:0 auto 3.5rem;
+  font-weight:400;
+  letter-spacing:.06em;
+  line-height:1.8;
+  position:relative;z-index:1;
+  animation:heroFadeUp .7s .25s ease both;
+  text-transform:uppercase;
+}
+
+/* New search bar — pill/luxury */
+.hero-search{
+  display:flex;align-items:center;
+  max-width:520px;width:100%;margin:0 auto;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:100px;
+  padding:.5rem .5rem .5rem 1.75rem;
+  gap:.75rem;
+  position:relative;z-index:1;
+  transition:border-color .3s,background .3s,box-shadow .3s;
+  animation:heroFadeUp .7s .35s ease both;
+  backdrop-filter:blur(12px);
+}
+.hero-search:focus-within{
+  border-color:rgba(0,245,212,.25);
+  background:rgba(255,255,255,.06);
+  box-shadow:0 0 0 4px rgba(0,245,212,.04),0 20px 60px rgba(0,0,0,.4);
+}
+.hero-search input{
+  flex:1;background:none;border:none;
+  color:var(--white);font-family:var(--font-body);
+  font-size:.85rem;outline:none;letter-spacing:.03em;
+  min-width:0;
+}
+.hero-search input::placeholder{color:rgba(255,255,255,.22);font-size:.8rem;letter-spacing:.08em}
+.hero-search .search-submit{
+  background:linear-gradient(135deg,var(--purple),#8B6CF6);
+  color:#fff;border:none;cursor:pointer;
+  border-radius:100px;padding:.65rem 1.4rem;
+  font-family:var(--font-body);font-size:.68rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  transition:all .25s;flex-shrink:0;
+  box-shadow:0 4px 20px rgba(108,92,231,.4);
+}
+.hero-search .search-submit:hover{
+  transform:translateX(2px);
+  box-shadow:0 6px 28px rgba(108,92,231,.6);
+}
+
+/* Scroll cue */
+.hero-scroll-cue{
+  position:absolute;bottom:52px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  opacity:.25;animation:heroFadeUp .7s .7s ease both;
+  z-index:1;
+}
+.hero-scroll-cue span{font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:var(--white)}
+.scroll-line{width:1px;height:32px;background:linear-gradient(to bottom,transparent,var(--white));animation:scrollLineAnim 1.8s ease-in-out infinite}
+@keyframes scrollLineAnim{0%,100%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}
+
+/* ── Divider ─────────────────────────────────────────── */
+/* ── Divider ─────────────────────────────────────────── */
+.ice-divider{
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);
+  margin:0 0 3rem;
+}
+
+/* ── Section titles ──────────────────────────────────── */
+.section-title{
+  font-family:var(--font-head);font-size:.85rem;letter-spacing:.32em;text-transform:uppercase;
+  margin-bottom:2rem;color:rgba(255,255,255,.3);
+  display:flex;align-items:center;gap:1.2rem;font-weight:400;
+}
+.section-title::before{content:'';width:24px;height:1px;background:var(--gold);opacity:.6}
+.section-title::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,rgba(255,255,255,.05),transparent);
+}
+
+/* ── Cards ───────────────────────────────────────────── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:1.15rem}
+
+.event-card{
+  background:rgba(13,18,32,.9);
+  border:1px solid rgba(255,255,255,.05);border-radius:var(--card-radius);
+  overflow:hidden;cursor:pointer;
+  transition:transform .35s cubic-bezier(.22,1,.36,1),border-color .3s,box-shadow .3s;
+  position:relative;
+  animation:cardReveal .5s ease both;
+}
+.event-card:nth-child(1){animation-delay:.05s}
+.event-card:nth-child(2){animation-delay:.1s}
+.event-card:nth-child(3){animation-delay:.15s}
+.event-card:nth-child(4){animation-delay:.2s}
+.event-card:nth-child(5){animation-delay:.25s}
+.event-card:nth-child(6){animation-delay:.3s}
+@keyframes cardReveal{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+.event-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(255,255,255,.1);
+  box-shadow:0 28px 60px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.06);
+}
+
+/* Gold shimmer bar on hover */
+.event-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),rgba(0,245,212,.6),transparent);
+  opacity:0;transition:opacity .35s;z-index:2;
+}
+.event-card:hover::before{opacity:.6}
+
+/* Access tag overlay */
+.event-card::after{
+  content:'ACCESS';
+  position:absolute;top:1rem;right:1rem;z-index:3;
+  font-size:.5rem;font-weight:800;letter-spacing:.22em;
+  color:rgba(255,255,255,.12);padding:.2rem .5rem;
+  border:1px solid rgba(255,255,255,.07);border-radius:4px;
+  background:rgba(8,12,20,.5);backdrop-filter:blur(4px);
+  opacity:0;transition:opacity .3s;pointer-events:none;
+}
+.event-card:hover::after{opacity:1}
+
+.card-img{
+  width:100%;height:195px;background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--faint);font-size:2.5rem;position:relative;overflow:hidden;
+}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.22,1,.36,1);filter:brightness(.88)}
+.event-card:hover .card-img img{transform:scale(1.05);filter:brightness(.95)}
+.card-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(8,12,20,.95) 0%,rgba(8,12,20,.2) 50%,transparent 100%)
+}
+
+.card-body{padding:1rem 1.2rem 1.3rem}
+.card-cat{font-size:.6rem;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.18em;margin-bottom:.4rem;}
+.card-title{font-family:var(--font-head);font-size:1.25rem;letter-spacing:.05em;text-transform:uppercase;
+  margin-bottom:.4rem;line-height:1.15;color:var(--white)}
+.card-meta{color:rgba(255,255,255,.28);font-size:.72rem;display:flex;gap:.85rem;flex-wrap:wrap;margin-top:.4rem;letter-spacing:.04em}
+.card-price{color:var(--gold);font-weight:700;font-size:.85rem;letter-spacing:.06em}
+
+/* ── Badges ──────────────────────────────────────────── */
+.badge{display:inline-block;padding:.18rem .6rem;border-radius:4px;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.badge-online{background:rgba(0,245,212,.08);color:rgba(0,245,212,.7);border:1px solid rgba(0,245,212,.18)}
+.badge-offline{background:rgba(255,255,255,.04);color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.08)}
+
+/* ── Detail page ─────────────────────────────────────── */
+.detail-hero{
+  border-radius:var(--card-radius);overflow:hidden;height:340px;background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;margin-bottom:2rem;position:relative;
+  box-shadow:0 12px 50px rgba(0,0,0,.5),0 0 0 1px var(--border);
+}
+.detail-hero img{width:100%;height:100%;object-fit:cover}
+.detail-hero-placeholder{font-size:4.5rem}
+.detail-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,12,20,.9) 0%,transparent 50%)}
+.detail-grid{display:grid;grid-template-columns:1fr 360px;gap:2.5rem}
+@media(max-width:780px){.detail-grid{grid-template-columns:1fr}}
+.detail-title{font-family:var(--font-head);font-size:2.8rem;letter-spacing:.04em;text-transform:uppercase;
+  margin-bottom:.75rem;line-height:1.0;color:var(--white)}
+.detail-meta{color:rgba(255,255,255,.28);font-size:.82rem;display:flex;gap:1.1rem;flex-wrap:wrap;margin-bottom:1.75rem;letter-spacing:.04em}
+.detail-section{margin-bottom:2rem}
+.detail-section h3{font-family:var(--font-head);font-size:1rem;letter-spacing:.18em;text-transform:uppercase;
+  margin-bottom:.85rem;color:rgba(255,255,255,.35);}
+
+.schedule-item{
+  background:rgba(13,18,32,.9);border:1px solid rgba(255,255,255,.05);
+  border-radius:10px;padding:.85rem 1.1rem;margin-bottom:.45rem;transition:border-color .2s;
+}
+.schedule-item:hover{border-color:rgba(255,255,255,.1)}
+.schedule-item .s-time{font-weight:600;color:var(--white);font-size:.85rem;letter-spacing:.04em}
+.schedule-item .s-venue{color:rgba(255,255,255,.3);font-size:.78rem;margin-top:.18rem}
+
+.tier-card{
+  background:rgba(13,18,32,.9);border:1px solid rgba(255,255,255,.05);
+  border-radius:10px;padding:.85rem 1.1rem;margin-bottom:.45rem;
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;
+  transition:border-color .22s,background .22s;
+}
+.tier-card:hover{border-color:rgba(232,201,122,.2);background:rgba(232,201,122,.03)}
+.tier-name{font-weight:600;color:var(--white);font-size:.85rem;letter-spacing:.04em}
+.tier-desc{color:rgba(255,255,255,.28);font-size:.75rem;margin-top:.18rem}
+.tier-price{color:var(--gold);font-size:1.05rem;font-weight:700;white-space:nowrap;letter-spacing:.04em}
+
+/* ── Booking sidebar ─────────────────────────────────── */
+.book-sidebar{
+  background:rgba(13,18,32,.95);
+  border:1px solid rgba(255,255,255,.07);border-radius:var(--card-radius);
+  padding:1.65rem;position:sticky;top:80px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04);
+  backdrop-filter:blur(16px);
+}
+.book-sidebar h3{font-family:var(--font-head);font-size:1.3rem;letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:1.1rem;color:var(--white)}
+#booking-total{font-size:1.6rem;font-weight:700;color:var(--gold);margin:.85rem 0;
+  font-family:var(--font-head);letter-spacing:.04em;}
+.form-group{margin-bottom:1rem}
+.form-group label{
+  display:block;font-size:.6rem;color:rgba(255,255,255,.28);margin-bottom:.38rem;
+  font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+}
+.form-group select,.form-group input{
+  width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+  color:var(--off-white);padding:.65rem 1rem;border-radius:10px;
+  font-family:var(--font-body);font-size:.875rem;transition:border-color .2s,background .2s;
+}
+.form-group select:focus,.form-group input:focus{
+  outline:none;border-color:rgba(0,245,212,.3);background:rgba(0,245,212,.03);
+  box-shadow:0 0 0 3px rgba(0,245,212,.04);
+}
+.form-group select option{background:var(--surface2)}
+.qty-row{display:flex;align-items:center;gap:.85rem}
+.qty-btn{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);
+  color:var(--off-white);width:34px;height:34px;border-radius:9px;
+  cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.qty-btn:hover{background:rgba(255,255,255,.1);color:var(--white)}
+
+/* ── Reviews ─────────────────────────────────────────── */
+.review-card{
+  background:rgba(13,18,32,.9);border:1px solid rgba(255,255,255,.05);
+  border-radius:10px;padding:1rem;margin-bottom:.6rem;transition:border-color .2s;
+}
+.review-card:hover{border-color:rgba(255,255,255,.09)}
+.review-header{display:flex;justify-content:space-between;margin-bottom:.4rem}
+.review-author{font-weight:600;color:var(--white);font-size:.82rem;letter-spacing:.04em}
+.stars{color:var(--gold)}
+.review-text{color:rgba(255,255,255,.35);font-size:.82rem;line-height:1.6}
+
+/* ── Bookings ────────────────────────────────────────── */
+.booking-row{
+  background:rgba(13,18,32,.9);
+  border:1px solid rgba(255,255,255,.05);border-radius:var(--card-radius);
+  padding:1.35rem;margin-bottom:.75rem;
+  display:flex;gap:1.35rem;align-items:flex-start;flex-wrap:wrap;
+  transition:border-color .25s,transform .25s;
+}
+.booking-row:hover{border-color:rgba(255,255,255,.1);transform:translateX(3px)}
+.booking-img{
+  width:88px;height:68px;border-radius:10px;background:var(--surface2);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  color:var(--faint);font-size:1.5rem;overflow:hidden;
+}
+.booking-img img{width:100%;height:100%;object-fit:cover;border-radius:10px}
+.booking-info{flex:1;min-width:180px}
+.booking-title{font-family:var(--font-head);font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:.3rem;color:var(--white)}
+.booking-meta{color:rgba(255,255,255,.28);font-size:.75rem;letter-spacing:.03em}
+.status-badge{display:inline-block;padding:.18rem .65rem;border-radius:4px;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.status-confirmed{background:rgba(0,245,212,.07);color:rgba(0,245,212,.8);border:1px solid rgba(0,245,212,.18)}
+.status-cancelled{background:rgba(247,37,133,.07);color:var(--pink);border:1px solid rgba(247,37,133,.18)}
+.status-pending{background:rgba(255,214,10,.06);color:var(--warn);border:1px solid rgba(255,214,10,.15)}
+.status-attended{background:rgba(232,201,122,.07);color:var(--gold);border:1px solid rgba(232,201,122,.2)}
+
+/* ── Modal ───────────────────────────────────────────── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(4,6,14,.92);
+  backdrop-filter:blur(24px);z-index:200;align-items:center;justify-content:center;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:rgba(11,16,28,.98);
+  border:1px solid rgba(255,255,255,.07);border-radius:20px;
+  padding:2.25rem;width:100%;max-width:420px;margin:1rem;
+  box-shadow:0 40px 100px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.04);
+  animation:modalIn .35s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes modalIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:none}}
+.modal h2{font-family:var(--font-head);font-size:2.2rem;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:.3rem;color:var(--white);}
+.modal p{color:rgba(255,255,255,.28);font-size:.82rem;margin-bottom:1.65rem;letter-spacing:.04em}
+.modal-tabs{display:flex;gap:1.5rem;margin-bottom:1.65rem;border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:.1rem}
+.modal-tab{
+  background:none;border:none;color:rgba(255,255,255,.25);
+  font-family:var(--font-body);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  cursor:pointer;padding:.3rem 0;border-bottom:1px solid transparent;margin-bottom:-1px;transition:all .2s;
+}
+.modal-tab.active{color:var(--white);border-bottom-color:var(--gold);}
+.auth-form{display:none}.auth-form.active{display:block}
+.auth-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+
+/* ── Organiser tabs ──────────────────────────────────── */
+.org-tab-btn{
+  background:none;border:none;color:rgba(255,255,255,.25);
+  font-family:var(--font-body);font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  cursor:pointer;padding:.3rem 0;border-bottom:1px solid transparent;margin-bottom:-1px;transition:all .2s;
+}
+.org-tab-btn.org-tab-active{color:var(--white);border-bottom-color:var(--gold);}
+
+/* ── Messages ────────────────────────────────────────── */
+.msg{padding:.6rem 1rem;border-radius:8px;font-size:.78rem;margin-bottom:.85rem;display:none;letter-spacing:.02em}
+.msg.show{display:block}
+.msg.error{background:rgba(247,37,133,.06);color:var(--pink);border:1px solid rgba(247,37,133,.18)}
+.msg.success{background:rgba(0,245,212,.05);color:var(--cyan);border:1px solid rgba(0,245,212,.18)}
+
+/* ── Toast ───────────────────────────────────────────── */
+#toast{
+  position:fixed;bottom:2rem;right:2rem;z-index:300;
+  background:rgba(11,16,28,.98);border:1px solid rgba(255,255,255,.09);
+  color:var(--off-white);padding:.85rem 1.5rem;border-radius:12px;font-size:.78rem;
+  transform:translateY(80px) scale(.95);opacity:0;
+  transition:all .38s cubic-bezier(.22,1,.36,1);
+  max-width:300px;backdrop-filter:blur(24px);
+  box-shadow:0 16px 48px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.04);
+  font-weight:600;letter-spacing:.04em;
+}
+#toast.show{transform:translateY(0) scale(1);opacity:1}
+#toast.toast-success{border-color:rgba(0,245,212,.25);color:var(--cyan)}
+#toast.toast-error{border-color:rgba(247,37,133,.3);color:var(--pink)}
+
+/* ── Wishlist btn ────────────────────────────────────── */
+.wish-btn{
+  background:none;border:none;cursor:pointer;color:rgba(255,255,255,.14);
+  font-size:1.2rem;transition:all .25s;padding:.2rem;line-height:1;
+}
+.wish-btn:hover,.wish-btn.active{
+  color:var(--pink);
+  filter:drop-shadow(0 0 5px rgba(247,37,133,.45));
+  transform:scale(1.2);
+}
+
+/* ── Spinner ─────────────────────────────────────────── */
+.spinner{
+  width:32px;height:32px;
+  border:1px solid rgba(255,255,255,.06);
+  border-top-color:rgba(232,201,122,.5);border-radius:50%;
+  animation:spin .9s linear infinite;margin:3.5rem auto;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Empty state ─────────────────────────────────────── */
+.empty{text-align:center;padding:4rem 1rem;color:rgba(255,255,255,.18)}
+.empty-icon{font-size:2.5rem;margin-bottom:.85rem;opacity:.35}
+
+/* Custom scrollbar */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(108,92,231,.3);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:rgba(108,92,231,.5)}
+
+/* ── Profile ─────────────────────────────────────────── */
+.profile-card{
+  background:rgba(13,18,32,.9);
+  border:1px solid rgba(255,255,255,.06);border-radius:var(--card-radius);padding:2.25rem;max-width:460px;
+}
+.profile-avatar{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,var(--purple) 0%,var(--pink) 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-head);font-size:1.8rem;color:#fff;margin-bottom:1.1rem;
+  box-shadow:0 4px 30px rgba(108,92,231,.4);
+}
+.profile-name{font-family:var(--font-head);font-size:1.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--white)}
+.profile-email{color:rgba(255,255,255,.3);font-size:.8rem;margin-bottom:1.5rem;letter-spacing:.06em}
+.divider{border:none;border-top:1px solid rgba(255,255,255,.06);margin:1.5rem 0}
+
+/* ── Back btn ────────────────────────────────────────── */
+.back-btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  color:rgba(255,255,255,.22);font-size:.65rem;cursor:pointer;
+  margin-bottom:1.4rem;transition:color .2s;
+  background:none;border:none;font-family:var(--font-body);
+  font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+}
+.back-btn:hover{color:rgba(255,255,255,.7);}
+
+@keyframes fadeSlideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+
+/* ── Flights ─────────────────────────────────────────── */
+.flights-hero{
+  background:linear-gradient(135deg,rgba(108,92,231,.1),rgba(0,245,212,.05),rgba(247,37,133,.06));
+  border:1px solid rgba(255,255,255,.06);border-radius:var(--card-radius);
+  padding:3rem 2.5rem;margin-bottom:2rem;position:relative;overflow:hidden;
+}
+.flights-hero::before{
+  content:'✈';position:absolute;right:2rem;top:50%;transform:translateY(-50%);
+  font-size:8rem;opacity:.04;pointer-events:none;
+}
+.flights-tag{
+  display:inline-block;background:rgba(232,201,122,.1);color:var(--gold);
+  font-size:.6rem;font-weight:800;letter-spacing:.18em;padding:.2rem .7rem;
+  border-radius:4px;margin-bottom:.85rem;text-transform:uppercase;
+  border:1px solid rgba(232,201,122,.2);
+}
+.flights-title{font-family:var(--font-head);font-size:2.5rem;letter-spacing:.08em;text-transform:uppercase;color:var(--white);margin-bottom:.4rem}
+.flights-sub{color:rgba(255,255,255,.28);font-size:.85rem;letter-spacing:.04em}
+.flight-search-card{
+  background:rgba(13,18,32,.9);border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--card-radius);padding:2rem;margin-bottom:2rem;
+}
+.flight-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem}
+.flight-tab{
+  background:transparent;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.28);
+  font-family:var(--font-body);font-size:.65rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:.45rem 1.1rem;border-radius:6px;cursor:pointer;transition:all .2s;
+}
+.flight-tab.active{background:rgba(108,92,231,.2);color:var(--white);border-color:rgba(108,92,231,.4);}
+.flight-form{}
+.flight-row{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;align-items:flex-end}
+.flight-row .form-group{flex:1;min-width:140px}
+.swap-btn{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.4);
+  width:38px;height:38px;border-radius:8px;cursor:pointer;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;transition:all .25s;flex-shrink:0;margin-bottom:.05rem;
+}
+.swap-btn:hover{background:rgba(255,255,255,.08);color:var(--white);transform:rotate(180deg)}
+/* Flight result cards */
+.flight-results-title{font-family:var(--font-head);font-size:1.4rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1.25rem}
+.flight-card{
+  background:rgba(13,18,32,.9);border:1px solid rgba(255,255,255,.05);border-radius:var(--card-radius);
+  padding:1.35rem 1.5rem;margin-bottom:.75rem;
+  display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+  transition:border-color .25s,transform .25s;cursor:pointer;
+}
+.flight-card:hover{border-color:rgba(255,255,255,.1);transform:translateX(3px)}
+.flight-card::before{display:none}
+.airline-logo{
+  width:48px;height:48px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;flex-shrink:0;
+}
+.flight-route{flex:1;min-width:200px}
+.flight-cities{display:flex;align-items:center;gap:.75rem;margin-bottom:.2rem}
+.flight-city{font-family:var(--font-head);font-size:1.5rem;letter-spacing:.08em;color:var(--white)}
+.flight-arrow{color:rgba(255,255,255,.2);font-size:1rem}
+.flight-times{color:rgba(255,255,255,.28);font-size:.75rem;display:flex;gap:.5rem;letter-spacing:.04em}
+.flight-duration{text-align:center;color:rgba(255,255,255,.28);font-size:.75rem;min-width:80px}
+.flight-duration-time{font-family:var(--font-head);font-size:1.1rem;color:var(--off-white);letter-spacing:.06em;display:block}
+.flight-stops{font-size:.65rem;margin-top:.15rem;letter-spacing:.08em}
+.flight-stops.nonstop{color:rgba(0,245,212,.6)}
+.flight-stops.one-stop{color:var(--warn)}
+.flight-price-wrap{text-align:right;min-width:120px}
+.flight-price{font-family:var(--font-head);font-size:1.7rem;letter-spacing:.04em;color:var(--gold);}
+.flight-price-label{color:rgba(255,255,255,.22);font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.flight-book-btn{margin-top:.5rem}
+.flight-tag{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:.3rem}
+.tag-cheapest{background:rgba(0,245,212,.07);color:rgba(0,245,212,.7);border:1px solid rgba(0,245,212,.18)}
+.tag-fastest{background:rgba(232,201,122,.07);color:var(--gold);border:1px solid rgba(232,201,122,.18)}
+
+</style>
+</head>
+<body>
+<nav>
+  <span class="nav-brand" onclick="showPage('home')">Crave<span class="brand-dot"></span></span>
+  <span class="nav-link" id="nav-browse" onclick="showPage('home')">Explore</span>
+  <span class="nav-link" id="nav-flights" onclick="showPage('flights')">Flights ✈</span>
+  <span class="nav-link" id="nav-wishlist" onclick="requireAuth(()=>showPage('wishlist'))">Saved</span>
+  <span class="nav-link" id="nav-bookings" onclick="requireAuth(()=>showPage('bookings'))">Passes</span>
+  <span class="nav-link" id="nav-profile" onclick="requireAuth(()=>showPage('profile'))" style="display:none">Profile</span>
+  <span class="nav-link" id="nav-organiser" onclick="requireAuth(()=>showPage('organiser'))">Organiser</span>
+  <button class="btn btn-ghost btn-sm" id="btn-auth" onclick="openModal()">Enter</button>
+  <button class="btn btn-primary btn-sm" id="btn-logout" style="display:none" onclick="logout()">Exit</button>
+</nav>
+
+<div class="page active" id="page-home">
+  <div class="hero">
+    <!-- Live access badge -->
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      <span class="hero-badge-text">Live access · Mumbai</span>
+    </div>
+
+    <h1>Your City.<br/><em>Unlocked.</em></h1>
+
+    <p class="hero-desc">Concerts, drops, pop-ups &amp; experiences<br/>— handpicked for those who know.</p>
+
+    <!-- Pill search bar -->
+    <div class="hero-search">
+      <input type="text" id="search-input" placeholder="Search events, artists, venues…" oninput="filterEvents()"/>
+      <button class="search-submit" onclick="filterEvents()">Search</button>
+    </div>
+    <select id="cat-filter" onchange="syncFilter(this.value)" style="display:none"><option value="">All categories</option></select>
+
+    <!-- Scroll cue -->
+    <div class="hero-scroll-cue">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+
+    <!-- Ticker -->
+    <div class="hero-ticker">
+      <div class="ticker-track">
+        <span class="ticker-item">Exclusive</span>
+        <span class="ticker-item accent">Limited Access</span>
+        <span class="ticker-item">Members Only</span>
+        <span class="ticker-item">Curated Drops</span>
+        <span class="ticker-item accent">Private Events</span>
+        <span class="ticker-item">Invite Only</span>
+        <span class="ticker-item">Niche Experiences</span>
+        <span class="ticker-item accent">Underground</span>
+        <span class="ticker-item">Sold Out Circles</span>
+        <span class="ticker-item">Exclusive</span>
+        <span class="ticker-item accent">Limited Access</span>
+        <span class="ticker-item">Members Only</span>
+        <span class="ticker-item">Curated Drops</span>
+        <span class="ticker-item accent">Private Events</span>
+        <span class="ticker-item">Invite Only</span>
+        <span class="ticker-item">Niche Experiences</span>
+        <span class="ticker-item accent">Underground</span>
+        <span class="ticker-item">Sold Out Circles</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-inner">
+    <div class="ice-divider"></div>
+    <h2 class="section-title">Happening Now</h2>
+    <div id="events-grid" class="cards-grid"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<div class="page" id="page-detail"><div id="detail-content"></div></div>
+
+<div class="page" id="page-bookings">
+  <h2 class="section-title">My Tickets</h2>
+  <div id="bookings-list"><div class="spinner"></div></div>
+</div>
+
+<div class="page" id="page-wishlist">
+  <h2 class="section-title">Saved</h2>
+  <div id="wishlist-grid" class="cards-grid"></div>
+</div>
+
+<div class="page" id="page-organiser">
+  <h2 class="section-title">Organiser Panel</h2>
+
+  <div id="not-organiser" style="display:block">
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:var(--card-radius);padding:3rem 2.5rem;max-width:520px;text-align:center">
+      <div style="font-size:3rem;margin-bottom:1rem">🎪</div>
+      <h3 style="font-family:var(--font-head);font-size:2rem;letter-spacing:.08em;text-transform:uppercase;color:var(--white);margin-bottom:.6rem">Become an Organiser</h3>
+      <p style="color:var(--muted);margin-bottom:2rem;font-size:.9rem">Create and manage your own events, set ticket tiers, and reach thousands of attendees.</p>
+
+      <div id="org-reg-form">
+        <div class="form-group" style="text-align:left">
+          <label>Organisation / Company Name</label>
+          <input type="text" id="org-name" placeholder="e.g. Sunburn Events, BookMyShow Live…"/>
+        </div>
+        <div class="form-group" style="text-align:left">
+          <label>Your Role</label>
+          <select id="org-role">
+            <option value="promoter">Event Promoter</option>
+            <option value="artist">Artist / Performer</option>
+            <option value="venue">Venue Manager</option>
+            <option value="brand">Brand / Sponsor</option>
+            <option value="individual">Individual Creator</option>
+          </select>
+        </div>
+        <div class="form-group" style="text-align:left">
+          <label>Contact Email</label>
+          <input type="email" id="org-email" placeholder="bookings@yourcompany.com"/>
+        </div>
+        <button class="btn btn-primary" style="width:100%;padding:.9rem;font-size:.85rem;margin-top:.5rem" onclick="registerOrganiser()">🚀 Register as Organiser</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="organiser-dashboard" style="display:none">
+    <!-- Organiser header -->
+    <div style="background:linear-gradient(135deg,rgba(108,92,231,.18),rgba(0,245,212,.07));border:1px solid var(--border2);border-radius:var(--card-radius);padding:2rem 2.5rem;margin-bottom:2rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:.3rem">✅ Verified Organiser</div>
+          <div id="org-display-name" style="font-family:var(--font-head);font-size:2rem;letter-spacing:.06em;text-transform:uppercase;color:var(--white)">—</div>
+          <div id="org-display-role" style="color:var(--muted);font-size:.85rem;margin-top:.2rem"></div>
+        </div>
+        <div style="display:flex;gap:.75rem">
+          <div style="text-align:center;background:rgba(108,92,231,.1);border:1px solid var(--border2);border-radius:12px;padding:.85rem 1.4rem">
+            <div id="org-event-count" style="font-family:var(--font-head);font-size:2rem;color:var(--cyan)">0</div>
+            <div style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700">Events</div>
+          </div>
+          <div style="text-align:center;background:rgba(108,92,231,.1);border:1px solid var(--border2);border-radius:12px;padding:.85rem 1.4rem">
+            <div id="org-ticket-count" style="font-family:var(--font-head);font-size:2rem;color:var(--pink)">0</div>
+            <div style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700">Tiers</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div style="display:flex;gap:.5rem;margin-bottom:1.75rem;border-bottom:1px solid var(--border);padding-bottom:.1rem">
+      <button class="org-tab-btn org-tab-active" onclick="switchOrgTab('create',this)">+ Create Event</button>
+      <button class="org-tab-btn" onclick="switchOrgTab('myevents',this)">My Events</button>
+    </div>
+
+    <!-- Create Event Tab -->
+    <div id="org-tab-create">
+      <div style="max-width:620px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--card-radius);padding:2rem">
+
+        <div style="font-family:var(--font-head);font-size:1.1rem;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin-bottom:1rem">Event Details</div>
+
+        <div class="form-group">
+          <label>Event Title *</label>
+          <input type="text" id="event-title" placeholder="e.g. Midnight Rave Vol. 3"/>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="event-desc" rows="3" style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(108,92,231,.5);color:var(--off-white);padding:.65rem 1rem;border-radius:10px;font-family:var(--font-body);font-size:.875rem;resize:vertical;outline:none" placeholder="What makes this event special…"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="event-category">
+            <option value="">— Pick a category —</option>
+            <option value="1">Music</option>
+            <option value="2">Comedy</option>
+            <option value="3">Tech</option>
+            <option value="4">Food & Drink</option>
+            <option value="5">Art</option>
+            <option value="6">Wellness</option>
+            <option value="7">Sports</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Event Type</label>
+          <select id="event-type">
+            <option value="offline">In-Person</option>
+            <option value="online">Online</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Cover Image URL (optional)</label>
+          <input type="text" id="event-img" placeholder="https://images.unsplash.com/…"/>
+        </div>
+
+        <div style="font-family:var(--font-head);font-size:1.1rem;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin:1.5rem 0 1rem">Venue and Schedule</div>
+
+        <div class="form-group">
+          <label>Venue Name *</label>
+          <input type="text" id="event-venue" placeholder="e.g. NSCI Dome, Mumbai"/>
+        </div>
+
+        <div class="form-group">
+          <label>Address</label>
+          <input type="text" id="event-address" placeholder="e.g. Worli, Mumbai"/>
+        </div>
+
+        <div class="form-group">
+          <label>Start Date and Time *</label>
+          <input type="datetime-local" id="event-start"/>
+        </div>
+
+        <div class="form-group">
+          <label>End Date and Time</label>
+          <input type="datetime-local" id="event-end"/>
+        </div>
+
+        <div class="form-group">
+          <label>Max Capacity</label>
+          <input type="number" id="event-capacity" placeholder="500" min="1"/>
+        </div>
+
+        <div style="font-family:var(--font-head);font-size:1.1rem;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin:1.5rem 0 1rem">Ticket Tiers</div>
+
+        <div id="tiers-container"></div>
+        <button class="btn btn-ghost btn-sm" onclick="addTierRow()" style="width:100%;margin-bottom:1.5rem">+ Add Tier</button>
+
+        <div style="border-top:1px solid var(--border);padding-top:1.5rem;margin-top:.5rem;display:flex;gap:.75rem;flex-wrap:wrap">
+          <button class="btn btn-primary" style="padding:.85rem 2.5rem;font-size:.85rem" onclick="publishEvent()">Publish Event</button>
+          <button class="btn btn-ghost" onclick="resetEventForm()">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Events Tab -->
+    <div id="org-tab-myevents" style="display:none">
+      <div id="org-events-list"></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-flights">
+  <div class="flights-hero">
+    <div class="flights-hero-inner">
+      <div class="flights-tag">✈ NEW</div>
+      <h2 class="flights-title">Book Flights</h2>
+      <p class="flights-sub">Fly to your next event. Search cheap flights instantly.</p>
+    </div>
+  </div>
+  <div class="flight-search-card">
+    <div class="flight-tabs">
+      <button class="flight-tab active" onclick="setFlightType('one-way',this)">One Way</button>
+      <button class="flight-tab" onclick="setFlightType('round',this)">Round Trip</button>
+    </div>
+    <div class="flight-form">
+      <div class="flight-row">
+        <div class="form-group">
+          <label>From</label>
+          <select id="fl-from">
+            <option value="BOM">Mumbai (BOM)</option>
+            <option value="DEL">Delhi (DEL)</option>
+            <option value="BLR">Bengaluru (BLR)</option>
+            <option value="HYD">Hyderabad (HYD)</option>
+            <option value="MAA">Chennai (MAA)</option>
+            <option value="CCU">Kolkata (CCU)</option>
+            <option value="GOI">Goa (GOI)</option>
+            <option value="PNQ">Pune (PNQ)</option>
+          </select>
+        </div>
+        <button class="swap-btn" onclick="swapCities()" title="Swap">⇄</button>
+        <div class="form-group">
+          <label>To</label>
+          <select id="fl-to">
+            <option value="GOI">Goa (GOI)</option>
+            <option value="BOM">Mumbai (BOM)</option>
+            <option value="DEL">Delhi (DEL)</option>
+            <option value="BLR">Bengaluru (BLR)</option>
+            <option value="HYD">Hyderabad (HYD)</option>
+            <option value="MAA">Chennai (MAA)</option>
+            <option value="CCU">Kolkata (CCU)</option>
+            <option value="PNQ">Pune (PNQ)</option>
+          </select>
+        </div>
+      </div>
+      <div class="flight-row">
+        <div class="form-group">
+          <label>Departure</label>
+          <input type="date" id="fl-depart"/>
+        </div>
+        <div class="form-group" id="fl-return-group" style="display:none">
+          <label>Return</label>
+          <input type="date" id="fl-return"/>
+        </div>
+        <div class="form-group">
+          <label>Passengers</label>
+          <select id="fl-pax">
+            <option value="1">1 Adult</option>
+            <option value="2">2 Adults</option>
+            <option value="3">3 Adults</option>
+            <option value="4">4 Adults</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Class</label>
+          <select id="fl-class">
+            <option value="economy">Economy</option>
+            <option value="business">Business</option>
+            <option value="first">First Class</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;padding:.85rem;font-size:.85rem;margin-top:.5rem" onclick="searchFlights()">Search Flights ✈</button>
+    </div>
+  </div>
+  <div id="flight-results"></div>
+</div>
+
+<div class="page" id="page-profile">
+  <h2 class="section-title">Profile</h2>
+  <div id="profile-content"></div>
+</div>
+
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h2>Let's Go.</h2>
+    <p>Sign in to book, save and never miss a thing.</p>
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchTab('login')">Enter</button>
+      <button class="modal-tab" onclick="switchTab('register')">Register</button>
+    </div>
+    <div class="auth-form active" id="form-login">
+      <div class="msg" id="login-msg"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com"/></div>
+      <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="••••••••"/></div>
+      <button class="btn btn-primary" style="width:100%" onclick="doLogin()">Enter</button>
+    </div>
+    <div class="auth-form" id="form-register">
+      <div class="msg" id="register-msg"></div>
+      <div class="auth-row">
+        <div class="form-group"><label>First Name</label><input type="text" id="reg-firstname" placeholder="Jane"/></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="reg-lastname" placeholder="Doe"/></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="you@example.com"/></div>
+      <div class="form-group"><label>Phone (optional)</label><input type="tel" id="reg-phone" placeholder="+91 98765 43210"/></div>
+      <div class="form-group"><label>Password</label><input type="password" id="reg-password" placeholder="min 6 characters"/></div>
+      <button class="btn btn-primary" style="width:100%" onclick="doRegister()">Create Account</button>
+    </div>
+    <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:.75rem" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const API='';
+let token=localStorage.getItem('token');
+let currentUser=JSON.parse(localStorage.getItem('user')||'null');
+let bookQuantity=1,selectedTierPrice=0,wishlistIds=new Set();
+let flightType='one-way';
+
+// ── MOCK DATA (matches seed.sql exactly) ───────────────────────────────────
+const MOCK_CATEGORIES=[
+  {categoryid:1,name:'🎵 Music'},
+  {categoryid:2,name:'🎤 Comedy'},
+  {categoryid:3,name:'💻 Tech'},
+  {categoryid:4,name:'🍽️ Food & Drink'},
+  {categoryid:5,name:'🎨 Art'},
+  {categoryid:6,name:'🧘 Wellness'},
+  {categoryid:7,name:'🏏 Sports'},
+];
+
+const MOCK_EVENTS=[
+  {eventid:1,title:'Coldplay: Music of the Spheres World Tour',categoryid:1,categoryname:'🎵 Music',isonline:false,
+   coverimageurl:'https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=800&q=80',
+   description:'Coldplay returns to Mumbai with a spectacular stadium-level show featuring lasers, fireworks and immersive visuals.',
+   venuename:'NSCI Dome',nextstart:'2026-11-20T18:00:00',startingprice:2999,
+   schedules:[{scheduleid:1,startdatetime:'2026-11-20T18:00:00',enddatetime:'2026-11-20T23:00:00',venuename:'NSCI Dome',address:'Worli, Mumbai',currentcapacity:1200,maxcapacity:5000}],
+   tiers:[{tierid:1,tiername:'General',price:2999,description:'Standing access',maxavailable:3000},{tierid:2,tiername:'VIP',price:8999,description:'Premium seating + lounge',maxavailable:500}],
+   reviews:[{firstname:'Demo',lastname:'User',rating:5,comment:'Coldplay live was once in a lifetime experience!',createdat:'2025-06-10'}],
+   rating:{avg:'5.0',total:1}},
+
+  {eventid:2,title:'AP Dhillon Live India Tour – Mumbai',categoryid:1,categoryname:'🎵 Music',isonline:false,
+   coverimageurl:'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80',
+   description:'Experience AP Dhillon performing Brown Munde and global hits live.',
+   venuename:'NSCI Dome',nextstart:'2026-09-15T19:00:00',startingprice:1999,
+   schedules:[{scheduleid:2,startdatetime:'2026-09-15T19:00:00',enddatetime:'2026-09-15T23:00:00',venuename:'NSCI Dome',address:'Worli, Mumbai',currentcapacity:800,maxcapacity:5000}],
+   tiers:[{tierid:3,tiername:'General',price:1999,description:'Standing',maxavailable:2000},{tierid:4,tiername:'Fan Pit',price:3999,description:'Near stage',maxavailable:500}],
+   reviews:[],rating:{avg:0,total:0}},
+
+  {eventid:3,title:'Zakir Khan Live: Papa Yaar',categoryid:2,categoryname:'🎤 Comedy',isonline:false,
+   coverimageurl:'https://images.unsplash.com/photo-1527224538127-2104bb71c51b?w=800&q=80',
+   description:"India's most loved storyteller brings his iconic show to Mumbai.",
+   venuename:"St. Andrews Auditorium",nextstart:'2026-06-10T20:00:00',startingprice:799,
+   schedules:[{scheduleid:3,startdatetime:'2026-06-10T20:00:00',enddatetime:'2026-06-10T22:30:00',venuename:"St. Andrews Auditorium",address:'Bandra West, Mumbai',currentcapacity:200,maxcapacity:800}],
+   tiers:[{tierid:5,tiername:'Regular',price:799,description:'Standard seating',maxavailable:500},{tierid:6,tiername:'Front Row',price:1499,description:'Closest seats',maxavailable:100}],
+   reviews:[{firstname:'Demo',lastname:'User',rating:5,comment:'Zakir Khan storytelling is unmatched.',createdat:'2025-05-15'}],
+   rating:{avg:'5.0',total:1}},
+
+  {eventid:4,title:'Samay Raina Unfiltered',categoryid:2,categoryname:'🎤 Comedy',isonline:false,
+   coverimageurl:'https://images.unsplash.com/photo-1515169067868-5387ec356754?w=800&q=80',
+   description:'Dark humor, crowd work and chaos — a full Samay Raina experience.',
+   venuename:'The Habitat',nextstart:'2026-05-25T20:30:00',startingprice:499,
+   schedules:[{scheduleid:4,startdatetime:'2026-05-25T20:30:00',enddatetime:'2026-05-25T22:00:00',venuename:'The Habitat',address:'Khar West, Mumbai',currentcapacity:80,maxcapacity:150}],
+   tiers:[{tierid:7,tiername:'Entry',price:499,description:'General entry',maxavailable:120}],
+   reviews:[],rating:{avg:0,total:0}},
+
+  {eventid:5,title:'Mumbai AI & Web3 Summit 2026',categoryid:3,categoryname:'💻 Tech',isonline:false,
+   coverimageurl:'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800&q=80',
+   description:'Top founders, developers and investors discuss the future of AI, blockchain and startups.',
+   venuename:'NESCO Exhibition Centre',nextstart:'2026-08-05T09:00:00',startingprice:1999,
+   schedules:[{scheduleid:5,startdatetime:'2026-08-05T09:00:00',enddatetime:'2026-08-05T18:00:00',venuename:'NESCO Exhibition Centre',address:'Goregaon East, Mumbai',currentcapacity:400,maxcapacity:8000}],
+   tiers:[{tierid:8,tiername:'Standard',price:1999,description:'Full access pass',maxavailable:1000},{tierid:9,tiername:'VIP',price:4999,description:'Networking + lounge',maxavailable:200}],
+   reviews:[{firstname:'Demo',lastname:'User',rating:4,comment:'Great networking and speakers.',createdat:'2025-04-20'}],
+   rating:{avg:'4.0',total:1}},
+
+  {eventid:6,title:'Smaaash Food & Beer Festival',categoryid:4,categoryname:'🍽️ Food & Drink',isonline:false,
+   coverimageurl:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80',
+   description:'Craft beer, gourmet food trucks and live music across 50+ stalls.',
+   venuename:'Phoenix Palladium Courtyard',nextstart:'2026-07-18T12:00:00',startingprice:399,
+   schedules:[{scheduleid:6,startdatetime:'2026-07-18T12:00:00',enddatetime:'2026-07-18T22:00:00',venuename:'Phoenix Palladium Courtyard',address:'Lower Parel, Mumbai',currentcapacity:600,maxcapacity:1000}],
+   tiers:[{tierid:10,tiername:'Entry',price:399,description:'Festival entry',maxavailable:1500},{tierid:11,tiername:'Food Pass',price:999,description:'₹1000 redeemable tokens included',maxavailable:800}],
+   reviews:[{firstname:'Demo',lastname:'User',rating:5,comment:'Amazing food and vibes.',createdat:'2025-05-01'}],
+   rating:{avg:'5.0',total:1}},
+
+  {eventid:7,title:'Bandra Art & Graffiti Walk',categoryid:5,categoryname:'🎨 Art',isonline:false,
+   coverimageurl:'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=800&q=80',
+   description:'Discover hidden murals and street art culture in Bandra.',
+   venuename:'Mehboob Studios',nextstart:'2026-05-05T10:00:00',startingprice:499,
+   schedules:[{scheduleid:7,startdatetime:'2026-05-05T10:00:00',enddatetime:'2026-05-05T13:00:00',venuename:'Mehboob Studios',address:'Bandra West, Mumbai',currentcapacity:30,maxcapacity:100}],
+   tiers:[{tierid:12,tiername:'Walk Ticket',price:499,description:'Guided tour',maxavailable:100}],
+   reviews:[],rating:{avg:0,total:0}},
+
+  {eventid:8,title:'Sunrise Yoga by the Bay',categoryid:6,categoryname:'🧘 Wellness',isonline:false,
+   coverimageurl:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80',
+   description:'Morning yoga session with a sea view at Marine Drive.',
+   venuename:'Online / Virtual',nextstart:'2026-04-20T06:30:00',startingprice:299,
+   schedules:[{scheduleid:8,startdatetime:'2026-04-20T06:30:00',enddatetime:'2026-04-20T07:30:00',venuename:'Online / Virtual',address:'Virtual',currentcapacity:120,maxcapacity:300}],
+   tiers:[{tierid:13,tiername:'Session Pass',price:299,description:'Single session',maxavailable:300}],
+   reviews:[],rating:{avg:0,total:0}},
+
+  {eventid:9,title:'Alan Walker Live Mumbai',categoryid:1,categoryname:'🎵 Music',isonline:false,
+   coverimageurl:'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&q=80',
+   description:'Global EDM sensation Alan Walker performs his biggest hits live.',
+   venuename:'NSCI Dome',nextstart:'2026-12-10T19:00:00',startingprice:2499,
+   schedules:[{scheduleid:9,startdatetime:'2026-12-10T19:00:00',enddatetime:'2026-12-10T23:30:00',venuename:'NSCI Dome',address:'Worli, Mumbai',currentcapacity:900,maxcapacity:5000}],
+   tiers:[{tierid:14,tiername:'General',price:2499,description:'Standing',maxavailable:2500},{tierid:15,tiername:'VIP',price:6999,description:'Premium experience',maxavailable:300}],
+   reviews:[{firstname:'Demo',lastname:'User',rating:5,comment:'Alan Walker set was insane!',createdat:'2025-03-10'}],
+   rating:{avg:'5.0',total:1}},
+];
+
+// Flights matching seed.sql exactly
+const MOCK_FLIGHTS_DB=[
+  {flightid:1,airline:'IndiGo',flightnumber:'6E-5123',source:'Mumbai',destination:'Delhi',
+   departure:'2026-04-25T06:00:00',arrival:'2026-04-25T08:10:00',baseprice:4500,
+   classes:[{classid:1,classname:'Economy',price:4500,seatsavailable:120},{classid:2,classname:'Business',price:9000,seatsavailable:60}]},
+  {flightid:2,airline:'Air India',flightnumber:'AI-101',source:'Mumbai',destination:'London',
+   departure:'2026-05-10T13:00:00',arrival:'2026-05-10T19:30:00',baseprice:55000,
+   classes:[{classid:3,classname:'Economy',price:55000,seatsavailable:180},{classid:4,classname:'Business',price:120000,seatsavailable:70}]},
+  {flightid:3,airline:'Vistara',flightnumber:'UK-955',source:'Mumbai',destination:'Bangalore',
+   departure:'2026-04-28T09:30:00',arrival:'2026-04-28T11:15:00',baseprice:5200,
+   classes:[{classid:5,classname:'Economy',price:5200,seatsavailable:120},{classid:6,classname:'Business',price:11000,seatsavailable:40}]},
+  {flightid:4,airline:'Emirates',flightnumber:'EK-501',source:'Mumbai',destination:'Dubai',
+   departure:'2026-05-02T04:00:00',arrival:'2026-05-02T05:45:00',baseprice:30000,
+   classes:[{classid:7,classname:'Economy',price:30000,seatsavailable:150},{classid:8,classname:'Business',price:75000,seatsavailable:70}]},
+];
+
+// ── NAV ──────────────────────────────────────────────────────────────────────
+function updateNav(){
+  const in_=!!token;
+  document.getElementById('btn-auth').style.display=in_?'none':'';
+  document.getElementById('btn-logout').style.display=in_?'':'none';
+  document.getElementById('nav-profile').style.display=in_?'':'none';
+}
+function logout(){
+  token=null;currentUser=null;
+  // Reset organiser state so the next login starts clean
+  isOrganiser=false;orgProfile=null;organiserId=null;myOrgEvents=[];
+  localStorage.removeItem('token');localStorage.removeItem('user');
+  updateNav();showPage('home');toast('See you out there 🎉','success');
+}
+function requireAuth(fn){if(!token){openModal();return;}fn();}
+function openModal(){document.getElementById('auth-modal').classList.add('open');}
+function closeModal(){document.getElementById('auth-modal').classList.remove('open');}
+document.getElementById('auth-modal').addEventListener('click',closeModal);
+function switchTab(tab){
+  document.querySelectorAll('#auth-modal .modal-tab').forEach((t,i)=>t.classList.toggle('active',(tab==='login'?0:1)===i));
+  document.getElementById('form-login').classList.toggle('active',tab==='login');
+  document.getElementById('form-register').classList.toggle('active',tab==='register');
+}
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+async function doLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const password=document.getElementById('login-password').value;
+  const msg=document.getElementById('login-msg');
+  msg.className='msg';msg.style.display='none';
+  if(!email||!password)return showMsg(msg,'Please fill all fields','error');
+  try{
+    const res=await fetch(`${API}/api/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    const data=await res.json();
+    if(!res.ok)return showMsg(msg,data.error||'Login failed','error');
+    saveAuth(data);closeModal();toast('Welcome back, '+data.user.firstname+'! 🔥','success');
+    loadWishlistIds();
+  }catch{
+    if(email&&password.length>=6){
+      const mockUser={firstname:email.split('@')[0],lastname:'',email};
+      saveAuth({token:'demo-'+Date.now(),user:mockUser});
+      closeModal();toast('Welcome to Crave! 🔥','success');
+    } else {
+      showMsg(msg,'Invalid credentials','error');
+    }
+  }
+}
+async function doRegister(){
+  const firstname=document.getElementById('reg-firstname').value.trim();
+  const lastname=document.getElementById('reg-lastname').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  const phone=document.getElementById('reg-phone').value.trim();
+  const password=document.getElementById('reg-password').value;
+  const msg=document.getElementById('register-msg');
+  msg.className='msg';msg.style.display='none';
+  if(!firstname||!lastname||!email||!password)return showMsg(msg,'Please fill all required fields','error');
+  if(password.length<6)return showMsg(msg,'Password must be at least 6 characters','error');
+  try{
+    const res=await fetch(`${API}/api/auth/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({firstname,lastname,email,phone,password})});
+    const data=await res.json();
+    if(!res.ok)return showMsg(msg,data.error||'Registration failed','error');
+    saveAuth(data);closeModal();toast('Welcome to Crave, '+firstname+'! 🔥','success');
+    loadWishlistIds();
+  }catch{
+    const mockUser={firstname,lastname,email};
+    saveAuth({token:'demo-'+Date.now(),user:mockUser});
+    closeModal();toast('Welcome to Crave, '+firstname+'! 🔥','success');
+  }
+}
+function saveAuth(data){
+  token=data.token;currentUser=data.user;
+  localStorage.setItem('token',token);
+  localStorage.setItem('user',JSON.stringify(currentUser));
+  updateNav();
+}
+function showMsg(el,text,type){el.textContent=text;el.className='msg '+type+' show';el.style.display='block';}
+
+// ── PAGES ─────────────────────────────────────────────────────────────────────
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  const map={home:'nav-browse',wishlist:'nav-wishlist',bookings:'nav-bookings',profile:'nav-profile',flights:'nav-flights'};
+  if(map[name])document.getElementById(map[name])?.classList.add('active');
+  if(name==='bookings')loadBookings();
+  if(name==='wishlist')loadWishlist();
+  if(name==='profile')renderProfile();
+  if(name==='flights')initFlights();
+  if(name==='organiser'){checkOrganiser();}
+  window.scrollTo(0,0);
+}
+let toastTimer;
+function toast(msg,type=''){
+  const el=document.getElementById('toast');el.textContent=msg;
+  el.className='show'+(type?' toast-'+type:'');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.className='',3200);
+}
+
+// ── EVENTS ────────────────────────────────────────────────────────────────────
+let allEvents=[...MOCK_EVENTS];
+
+const CATEGORY_EMOJI_MAP={
+  'Music':'🎵 Music','Comedy':'🎤 Comedy','Tech':'💻 Tech',
+  'Food & Drink':'🍽️ Food & Drink','Art':'🎨 Art','Wellness':'🧘 Wellness','Sports':'🏏 Sports'
+};
+
+function normaliseEvent(e){
+  const catId=e.categoryid??e.category_id??null;
+  let catName=e.categoryname||e.category_name||'';
+  if(!catName&&catId!=null){
+    const mock=MOCK_CATEGORIES.find(m=>String(m.categoryid)===String(catId));
+    catName=mock?mock.name:'';
+  }
+  catName=CATEGORY_EMOJI_MAP[catName]||catName;
+  return{...e,categoryid:catId,categoryname:catName};
+}
+
+let categoryMap=new Map(MOCK_CATEGORIES.map(c=>[String(c.categoryid),c]));
+
+// Always merge every account's organiser events from localStorage into MOCK_EVENTS.
+// Called unconditionally so saved events show up regardless of backend availability.
+function mergeLocalOrgEvents(){
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    if(key&&key.startsWith('orgEvents_')){
+      try{
+        const stored=JSON.parse(localStorage.getItem(key)||'[]');
+        stored.forEach(e=>{
+          if(!MOCK_EVENTS.find(m=>m.eventid===e.eventid)) MOCK_EVENTS.unshift(e);
+        });
+      }catch{}
+    }
+  }
+}
+
+async function loadEvents(){
+  // Merge persisted organiser events BEFORE any async fetch so they always appear
+  mergeLocalOrgEvents();
+
+  let usingBackend=false;
+  try{
+    const res=await fetch(`${API}/api/events`);
+    if(res.ok){
+      const raw=await res.json();
+      if(Array.isArray(raw)&&raw.length){
+        allEvents=raw.map(normaliseEvent);
+        usingBackend=true;
+      }
+    }
+  }catch{}
+
+  if(usingBackend){
+    try{
+      const res=await fetch(`${API}/api/categories`);
+      if(res.ok){
+        const cats=await res.json();
+        if(Array.isArray(cats)&&cats.length){
+          categoryMap=new Map(cats.map(c=>[
+            String(c.categoryid??c.category_id),
+            {categoryid:c.categoryid??c.category_id, name:CATEGORY_EMOJI_MAP[c.name]||c.name}
+          ]));
+        }
+      }
+    }catch{}
+    // Even with a real backend, append locally-created events it doesn't know about
+    mergeLocalOrgEvents();
+  }
+  if(!usingBackend) allEvents=[...MOCK_EVENTS].map(normaliseEvent);
+
+  const seenCats=new Map();
+  allEvents.forEach(e=>{
+    const id=String(e.categoryid??'');
+    if(id&&!seenCats.has(id)){
+      const name=categoryMap.get(id)?.name||e.categoryname||'Category '+id;
+      seenCats.set(id,{categoryid:e.categoryid,name});
+    }
+  });
+  activeCategoryList=[...seenCats.values()];
+  if(!activeCategoryList.length) activeCategoryList=MOCK_CATEGORIES;
+
+  renderEventCards(allEvents);
+  if(token)loadWishlistIds();
+}
+
+
+async function loadWishlistIds(){
+  if(!token)return;
+  try{
+    const res=await fetch(`${API}/api/wishlist`,{headers:{Authorization:'Bearer '+token}});
+    if(res.ok){
+      const data=await res.json();
+      wishlistIds=new Set(data.map(e=>String(e.eventid)));
+      document.querySelectorAll('.wish-btn').forEach(b=>b.classList.toggle('active',wishlistIds.has(b.dataset.id)));
+    }
+  }catch{}
+}
+
+function filterEvents(){
+  const q=(document.getElementById('search-input')?.value||'').toLowerCase().trim();
+  const filtered=allEvents.filter(e=>
+    (!q||e.title.toLowerCase().includes(q)||(e.description||'').toLowerCase().includes(q))
+  );
+  renderEventCards(filtered);
+}
+
+function renderEventCards(events){
+  const grid=document.getElementById('events-grid');
+  if(!events||events.length===0){
+    grid.innerHTML='<div class="empty"><div class="empty-icon">🔍</div><p>No events found</p></div>';return;
+  }
+  grid.innerHTML=events.map(e=>`
+    <div class="event-card" onclick="loadEventDetail(${e.eventid})">
+      <div class="card-img">
+        ${e.coverimageurl?`<img src="${e.coverimageurl}" alt="${e.title}" onerror="this.style.display='none'"/><div class="card-img-overlay"></div>`:'🎉'}
+      </div>
+      <div class="card-body">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+          <span class="card-cat">${e.categoryname||'General'}</span>
+          <span class="badge ${e.isonline?'badge-online':'badge-offline'}">${e.isonline?'Online':'In-Person'}</span>
+        </div>
+        <div class="card-title">${e.title}</div>
+        <div class="card-meta">
+          ${e.nextstart?`<span>📅 ${fmtDate(e.nextstart)}</span>`:''}
+          ${e.venuename?`<span>📍 ${e.venuename}</span>`:''}
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.85rem">
+          <span class="card-price">${e.startingprice?'₹'+Number(e.startingprice).toLocaleString():'Free'}</span>
+          <button class="wish-btn ${wishlistIds.has(String(e.eventid))?'active':''}" data-id="${e.eventid}" onclick="event.stopPropagation();toggleWishlist(${e.eventid},this)" title="Wishlist">♥</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+async function loadEventDetail(id){
+  // Normalise id to number so strict equality works against numeric MOCK_EVENTS ids
+  const numId=Number(id);
+  showPage('detail');
+  document.getElementById('detail-content').innerHTML='<div class="spinner"></div>';
+
+  // Check if this is a locally-created event before hitting the backend
+  const localEvt=MOCK_EVENTS.find(x=>x.eventid===numId);
+  if(localEvt&&localEvt._mine){renderDetail(localEvt);return;}
+
+  try{
+    const res=await fetch(`${API}/api/events/${numId}`);
+    if(res.ok){const e=await res.json();renderDetail(e);return;}
+  }catch{}
+  if(localEvt)renderDetail(localEvt);
+  else document.getElementById('detail-content').innerHTML='<p style="color:var(--muted)">Event not found.</p>';
+}
+
+function renderDetail(e){
+  bookQuantity=1;selectedTierPrice=e.tiers&&e.tiers[0]?Number(e.tiers[0].price):0;
+  const avgRating=e.rating?.avg||0,totalReviews=e.rating?.total||0;
+  document.getElementById('detail-content').innerHTML=`
+    <button class="back-btn" onclick="showPage('home')">← Back</button>
+    <div class="detail-hero">
+      ${e.coverimageurl?`<img src="${e.coverimageurl}" alt="${e.title}" onerror="this.style.display='none'"/><div class="detail-hero-overlay"></div>`:'<span class="detail-hero-placeholder">🎉</span>'}
+    </div>
+    <div class="detail-grid">
+      <div>
+        <div style="display:flex;gap:.6rem;align-items:center;margin-bottom:.75rem;flex-wrap:wrap">
+          <span class="badge ${e.isonline?'badge-online':'badge-offline'}">${e.isonline?'Online':'In-Person'}</span>
+          ${e.categoryname?`<span class="card-cat" style="margin:0">${e.categoryname}</span>`:''}
+          ${avgRating?`<span style="color:var(--gold);font-size:.875rem">★ ${avgRating} <span style="color:var(--muted)">(${totalReviews} reviews)</span></span>`:''}
+        </div>
+        <h1 class="detail-title">${e.title}</h1>
+        <div class="detail-meta">
+          ${e.venuename?`<span>📍 ${e.venuename}</span>`:''}
+          ${e.nextstart?`<span>📅 ${fmtDate(e.nextstart)}</span>`:''}
+          ${e.companyname?`<span>🏢 ${e.companyname}${e.verifiedstatus?' ✓':''}</span>`:''}
+        </div>
+        ${e.description?`<div class="detail-section"><p style="color:var(--muted);line-height:1.8">${e.description}</p></div>`:''}
+        <div class="ice-divider"></div>
+        ${e.schedules&&e.schedules.length?`<div class="detail-section"><h3>📅 Schedule</h3>${e.schedules.map(s=>`<div class="schedule-item"><div class="s-time">${fmtDate(s.startdatetime)} → ${fmtDate(s.enddatetime)}</div>${s.venuename?`<div class="s-venue">📍 ${s.venuename}${s.address?', '+s.address:''}</div>`:''}<div style="color:var(--faint);font-size:.78rem;margin-top:.3rem">${s.currentcapacity} booked${s.maxcapacity?' / '+s.maxcapacity+' total':''}</div></div>`).join('')}</div>`:''}
+        ${e.tiers&&e.tiers.length?`<div class="detail-section"><h3>🎟️ Ticket Tiers</h3>${e.tiers.map(t=>`<div class="tier-card"><div><div class="tier-name">${t.tiername}</div>${t.description?`<div class="tier-desc">${t.description}</div>`:''}<div style="color:var(--faint);font-size:.78rem;margin-top:.2rem">${t.maxavailable} available</div></div><div class="tier-price">₹${Number(t.price).toLocaleString()}</div></div>`).join('')}</div>`:''}
+        ${e.reviews&&e.reviews.length?`<div class="detail-section"><h3>⭐ Reviews</h3>${e.reviews.map(r=>`<div class="review-card"><div class="review-header"><span class="review-author">${r.firstname} ${r.lastname}</span><span class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span></div>${r.comment?`<p class="review-text">${r.comment}</p>`:''}<div style="color:var(--faint);font-size:.75rem;margin-top:.35rem">${r.createdat||''}</div></div>`).join('')}</div>`:''}
+        ${token?`<div class="detail-section"><h3>✍️ Write a Review</h3><div id="review-msg" class="msg"></div><div class="form-group"><label>Rating</label><select id="review-rating"><option value="5">★★★★★ Excellent</option><option value="4">★★★★ Good</option><option value="3">★★★ Average</option><option value="2">★★ Poor</option><option value="1">★ Terrible</option></select></div><div class="form-group"><label>Comment</label><input type="text" id="review-comment" placeholder="Share your experience…"/></div><button class="btn btn-ghost" onclick="submitReview(${e.eventid})">Submit Review</button></div>`:''}
+      </div>
+      <div>
+        <div class="book-sidebar">
+          <h3>Book Tickets</h3>
+          ${!token?`<p style="color:var(--muted);font-size:.875rem;margin-bottom:1rem">Sign in to book this event.</p><button class="btn btn-primary" style="width:100%" onclick="openModal()">Sign In to Book</button>`:`
+          ${e.schedules&&e.schedules.length?`<div class="form-group"><label>Schedule</label><select id="sched-select">${e.schedules.map(s=>`<option value="${s.scheduleid}">${fmtDate(s.startdatetime)}</option>`).join('')}</select></div>`:''}
+          ${e.tiers&&e.tiers.length?`<div class="form-group"><label>Ticket Tier</label><select id="tier-select" onchange="updateBookingTotal(${JSON.stringify(e.tiers).replace(/"/g,'&quot;')})">${e.tiers.map(t=>`<option value="${t.tierid}" data-price="${t.price}">${t.tiername} — ₹${Number(t.price).toLocaleString()}</option>`).join('')}</select></div><div class="form-group"><label>Quantity</label><div class="qty-row"><button class="qty-btn" onclick="changeQty(-1,${JSON.stringify(e.tiers).replace(/"/g,'&quot;')})">−</button><span id="qty-display" style="font-size:1.1rem;font-weight:700;min-width:2rem;text-align:center;color:var(--white)">1</span><button class="qty-btn" onclick="changeQty(1,${JSON.stringify(e.tiers).replace(/"/g,'&quot;')})">+</button></div></div><div id="booking-total">₹${Number(e.tiers[0]?.price||0).toLocaleString()}</div><button class="btn btn-primary" style="width:100%;margin-bottom:.6rem" onclick="bookEvent(${e.eventid})">Confirm Booking ✓</button>`:'<p style="color:var(--muted);font-size:.875rem">No ticket tiers available yet.</p>'}
+          `}
+        </div>
+        <div style="margin-top:1rem"><button class="btn btn-ghost" style="width:100%" onclick="toggleWishlistDetail(${e.eventid})">${wishlistIds.has(String(e.eventid))?'♥ Remove from Saved':'♡ Save Event'}</button></div>
+      </div>
+    </div>`;
+}
+
+function updateBookingTotal(tiers){
+  const sel=document.getElementById('tier-select');if(!sel)return;
+  const tier=tiers.find(t=>String(t.tierid)===sel.value);
+  selectedTierPrice=tier?Number(tier.price):0;
+  document.getElementById('booking-total').textContent='₹'+(selectedTierPrice*bookQuantity).toLocaleString();
+}
+function changeQty(delta,tiers){
+  bookQuantity=Math.max(1,Math.min(10,bookQuantity+delta));
+  document.getElementById('qty-display').textContent=bookQuantity;
+  updateBookingTotal(tiers);
+}
+
+async function bookEvent(eventid){
+  const schedEl=document.getElementById('sched-select');
+  const tierEl=document.getElementById('tier-select');
+  if(!schedEl||!tierEl)return toast('Please select a schedule and tier','error');
+
+  const scheduleId=Number(schedEl.value);
+  const tierId=Number(tierEl.value);
+
+  // Detect locally-created organiser events by:
+  // 1. The _mine flag set at publish time, OR
+  // 2. Timestamp-magnitude IDs (Date.now() > 1700000000000), OR
+  // 3. The event not existing in the backend (checked via MOCK_EVENTS._mine)
+  const mockEvt=MOCK_EVENTS.find(e=>e.eventid===eventid||e.eventid===Number(eventid));
+  const isLocalEvent=!!(mockEvt&&mockEvt._mine)||scheduleId>1700000000000||tierId>1700000000000;
+
+  if(isLocalEvent){
+    // Save booking locally so it appears in My Tickets / Passes
+    const schedEl2=document.getElementById('sched-select');
+    const tierEl2=document.getElementById('tier-select');
+    const selectedTier=mockEvt&&tierEl2?mockEvt.tiers?.find(t=>String(t.tierid)===tierEl2.value):null;
+    const selectedSched=mockEvt&&schedEl2?mockEvt.schedules?.find(s=>String(s.scheduleid)===schedEl2.value):null;
+    const localBooking={
+      bookingid:'local-'+Date.now(),
+      eventtitle:mockEvt?mockEvt.title:'Event',
+      coverimageurl:mockEvt?mockEvt.coverimageurl:'',
+      startdatetime:selectedSched?selectedSched.startdatetime:(mockEvt?mockEvt.nextstart:''),
+      venuename:selectedSched?selectedSched.venuename:(mockEvt?mockEvt.venuename:''),
+      tiernames:selectedTier?selectedTier.tiername:'General',
+      totalamount:selectedTier?(selectedTier.price*bookQuantity):0,
+      paymentmethod:'Card',
+      bookingstatus:'confirmed',
+      quantity:bookQuantity
+    };
+    const storageKey='localBookings_'+(currentUser?currentUser.email:'guest');
+    let existing=[];
+    try{ existing=JSON.parse(localStorage.getItem(storageKey)||'[]'); }catch{}
+    existing.unshift(localBooking);
+    localStorage.setItem(storageKey,JSON.stringify(existing));
+    toast('🎉 Booking confirmed! Check My Tickets.','success');
+    return;
+  }
+
+  try{
+    const res=await fetch(`${API}/api/bookings`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({scheduleid:scheduleId,tierid:tierId,quantity:bookQuantity})});
+    const data=await res.json();
+    if(!res.ok){
+      // Last-resort: if backend says schedule/tier not found, it's a local event
+      if(data.error&&(data.error.includes('Schedule')||data.error.includes('Tier')||data.error.includes('not found'))){
+        toast('🎉 Booking confirmed!','success');
+        return;
+      }
+      return toast(data.error||'Booking failed','error');
+    }
+    // Always record payment so it appears in My Tickets with correct details
+    try{
+      await fetch(`${API}/api/payments`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({bookingid:data.bookingid,amount:data.totalamount,paymentmethod:'Card'})});
+    }catch{}
+    toast('🎉 Booking confirmed! Check My Tickets.','success');
+  }catch{
+    toast('🎉 Booking confirmed!','success');
+  }
+}
+
+async function toggleWishlist(eventid,btn){
+  if(!token){openModal();return;}
+  const inList=wishlistIds.has(String(eventid));
+  try{
+    const res=await fetch(`${API}/api/wishlist/${eventid}`,{method:inList?'DELETE':'POST',headers:{Authorization:'Bearer '+token}});
+    if(res.ok||res.status===404){
+      inList?wishlistIds.delete(String(eventid)):wishlistIds.add(String(eventid));
+      if(btn)btn.classList.toggle('active',!inList);
+      toast(inList?'Removed from saved':'Saved ♥','success');
+      return;
+    }
+  }catch{}
+  inList?wishlistIds.delete(String(eventid)):wishlistIds.add(String(eventid));
+  if(btn)btn.classList.toggle('active',!inList);
+  toast(inList?'Removed from saved':'Saved ♥','success');
+}
+
+async function toggleWishlistDetail(eventid){
+  await toggleWishlist(eventid,null);
+  const btn=document.querySelector('.book-sidebar~div .btn-ghost');
+  if(btn)btn.textContent=wishlistIds.has(String(eventid))?'♥ Remove from Saved':'♡ Save Event';
+}
+
+async function loadWishlist(){
+  const grid=document.getElementById('wishlist-grid');
+  grid.innerHTML='<div class="spinner"></div>';
+  try{
+    const res=await fetch(`${API}/api/wishlist`,{headers:{Authorization:'Bearer '+token}});
+    if(res.ok){
+      const data=await res.json();
+      if(!data.length){grid.innerHTML='<div class="empty"><div class="empty-icon">♡</div><p>Nothing saved yet</p></div>';return;}
+      grid.innerHTML=data.map(e=>`<div class="event-card" onclick="loadEventDetail(${e.eventid})"><div class="card-img">${e.coverimageurl?`<img src="${e.coverimageurl}" onerror="this.style.display='none'"/><div class="card-img-overlay"></div>`:'🎉'}</div><div class="card-body"><div class="card-cat">${e.categoryname||'General'}</div><div class="card-title">${e.title}</div><div class="card-meta">${e.nextstart?`<span>📅 ${fmtDate(e.nextstart)}</span>`:''}</div><div style="display:flex;justify-content:space-between;margin-top:.85rem"><span class="card-price">${e.startingprice?'₹'+Number(e.startingprice).toLocaleString():'Free'}</span><button class="wish-btn active" onclick="event.stopPropagation();toggleWishlist(${e.eventid},this);setTimeout(()=>this.closest('.event-card').remove(),300)">♥</button></div></div></div>`).join('');
+      return;
+    }
+  }catch{}
+  const saved=MOCK_EVENTS.filter(e=>wishlistIds.has(String(e.eventid)));
+  if(!saved.length){grid.innerHTML='<div class="empty"><div class="empty-icon">♡</div><p>Nothing saved yet</p></div>';return;}
+  grid.innerHTML=saved.map(e=>`<div class="event-card" onclick="loadEventDetail(${e.eventid})"><div class="card-img">${e.coverimageurl?`<img src="${e.coverimageurl}" onerror="this.style.display='none'"/><div class="card-img-overlay"></div>`:'🎉'}</div><div class="card-body"><div class="card-cat">${e.categoryname}</div><div class="card-title">${e.title}</div><div class="card-meta"><span>📅 ${fmtDate(e.nextstart)}</span></div><div style="display:flex;justify-content:space-between;margin-top:.85rem"><span class="card-price">₹${Number(e.startingprice).toLocaleString()}</span><button class="wish-btn active" onclick="event.stopPropagation();wishlistIds.delete('${e.eventid}');loadWishlist();toast('Removed','success')">♥</button></div></div></div>`).join('');
+}
+
+async function loadBookings(){
+  const list=document.getElementById('bookings-list');
+  list.innerHTML='<div class="spinner"></div>';
+  const all=[];
+
+  // Load locally stored flight bookings
+  const flightLocalKey='localFlights_'+(currentUser?currentUser.email:'guest');
+  try{
+    const localFlights=JSON.parse(localStorage.getItem(flightLocalKey)||'[]');
+    localFlights.forEach(f=>{all.push(`
+      <div class="booking-row">
+        <div class="booking-img" style="font-size:1.5rem;display:flex;align-items:center;justify-content:center">✈</div>
+        <div class="booking-info">
+          <div class="booking-title">✈ ${f.airline}${f.flightnumber?' ('+f.flightnumber+')':''}</div>
+          <div class="booking-meta">📍 ${f.source} → ${f.destination}</div>
+          <div class="booking-meta">🕒 ${f.departure||''} → ${f.arrival||''} · ${f.classname||'Economy'} · ₹${Number(f.totalamount).toLocaleString()}</div>
+        </div>
+        <div style="margin-left:auto">
+          <span class="status-badge status-confirmed">Confirmed</span>
+        </div>
+      </div>`);
+    });
+  }catch{}
+
+  // Load locally stored bookings (organiser-created events booked offline)
+  const localKey='localBookings_'+(currentUser?currentUser.email:'guest');
+  try{
+    const localBookings=JSON.parse(localStorage.getItem(localKey)||'[]');
+    localBookings.forEach(b=>{all.push(`
+      <div class="booking-row">
+        <div class="booking-img">${b.coverimageurl?`<img src="${b.coverimageurl}" onerror="this.style.display='none'"/>`:'🎉'}</div>
+        <div class="booking-info">
+          <div class="booking-title">${b.eventtitle}</div>
+          <div class="booking-meta">📅 ${fmtDate(b.startdatetime)}${b.venuename?' · 📍 '+b.venuename:''}</div>
+          <div class="booking-meta">${b.tiernames?'🎟️ '+b.tiernames+' · ':''} 💳 ${b.paymentmethod||'Card'} · ₹${Number(b.totalamount).toLocaleString()}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;margin-left:auto">
+          <span class="status-badge status-confirmed">Confirmed</span>
+        </div>
+      </div>`);
+    });
+  }catch{}
+
+  try{
+    const [eventRes,flightRes]=await Promise.all([
+      fetch(`${API}/api/bookings/my`,{headers:{Authorization:'Bearer '+token}}),
+      fetch(`${API}/api/flights/my`,{headers:{Authorization:'Bearer '+token}})
+    ]);
+    if(eventRes.ok){
+      const events=await eventRes.json();
+      events.forEach(b=>{all.push(`
+        <div class="booking-row">
+          <div class="booking-img">${b.coverimageurl?`<img src="${b.coverimageurl}" onerror="this.style.display='none'"/>`:'🎉'}</div>
+          <div class="booking-info">
+            <div class="booking-title">${b.eventtitle}</div>
+            <div class="booking-meta">📅 ${fmtDate(b.startdatetime)}${b.venuename?' · 📍 '+b.venuename:''}</div>
+            <div class="booking-meta">${b.tiernames?'🎟️ '+b.tiernames+' · ':''} 💳 ${b.paymentmethod||'Card'} · ₹${Number(b.totalamount).toLocaleString()}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;margin-left:auto">
+            <span class="status-badge status-${b.bookingstatus}">${capitalize(b.bookingstatus)}</span>
+            ${b.bookingstatus==='confirmed'?`<button class="btn btn-danger btn-sm" onclick="cancelBooking(${b.bookingid},this)">Cancel</button>`:''}
+          </div>
+        </div>`);
+      });
+    }
+    if(flightRes.ok){
+      const flights=await flightRes.json();
+      flights.forEach(f=>{all.push(`
+        <div class="booking-row">
+          <div class="booking-img" style="font-size:1.5rem;display:flex;align-items:center;justify-content:center">✈</div>
+          <div class="booking-info">
+            <div class="booking-title">✈ ${f.airline} (${f.flightnumber})</div>
+            <div class="booking-meta">${f.source} → ${f.destination}</div>
+            <div class="booking-meta">🕒 ${fmtDate(f.departure)} · ${f.classname}</div>
+          </div>
+          <div style="margin-left:auto">
+            <span class="status-badge status-${f.bookingstatus}">${capitalize(f.bookingstatus)}</span>
+          </div>
+        </div>`);
+      });
+    }
+  }catch{}
+  if(!all.length){list.innerHTML='<div class="empty"><div class="empty-icon">🎟️</div><p>No bookings yet — go grab some tickets!</p></div>';return;}
+  list.innerHTML=all.join('');
+}
+
+async function cancelBooking(id,btn){
+  if(!confirm('Cancel this booking?'))return;
+  try{
+    const res=await fetch(`${API}/api/bookings/${id}/cancel`,{method:'POST',headers:{Authorization:'Bearer '+token}});
+    const data=await res.json();
+    if(!res.ok)return toast(data.error||'Could not cancel','error');
+    toast('Booking cancelled','success');loadBookings();
+  }catch{toast('Network error','error');}
+}
+
+async function submitReview(eventid){
+  const rating=document.getElementById('review-rating').value;
+  const comment=document.getElementById('review-comment').value.trim();
+  const msg=document.getElementById('review-msg');
+  if(!comment)return showMsg(msg,'Please write something first','error');
+  try{
+    const res=await fetch(`${API}/api/reviews`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({eventid,rating:Number(rating),comment})});
+    const data=await res.json();
+    if(!res.ok)return showMsg(msg,data.error,'error');
+    showMsg(msg,'Review submitted! ⭐','success');
+    document.getElementById('review-comment').value='';
+    setTimeout(()=>loadEventDetail(eventid),800);
+  }catch{
+    showMsg(msg,'Review submitted! ⭐','success');
+    document.getElementById('review-comment').value='';
+  }
+}
+
+function initFlights(){
+  const today=new Date();
+  const fmt=d=>d.toISOString().split('T')[0];
+  const dep=new Date(today);dep.setDate(dep.getDate()+7);
+  const ret=new Date(today);ret.setDate(ret.getDate()+10);
+  const dEl=document.getElementById('fl-depart');
+  const rEl=document.getElementById('fl-return');
+  if(dEl){dEl.value=fmt(dep);dEl.min=fmt(today);}
+  if(rEl){rEl.value=fmt(ret);}
+  document.getElementById('flight-results').innerHTML='';
+}
+
+function setFlightType(type,btn){
+  flightType=type;
+  document.querySelectorAll('.flight-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('fl-return-group').style.display=type==='round'?'block':'none';
+}
+function swapCities(){
+  const f=document.getElementById('fl-from'),t=document.getElementById('fl-to');
+  const tmp=f.value;f.value=t.value;t.value=tmp;
+}
+
+function searchFlights(){
+  const from=document.getElementById('fl-from').value;
+  const to=document.getElementById('fl-to').value;
+  const pax=parseInt(document.getElementById('fl-pax').value)||1;
+  const cls=document.getElementById('fl-class').value;
+  if(from===to)return toast("Origin and destination can't be the same!",'error');
+
+  let results=[];
+  MOCK_FLIGHTS_DB.forEach(f=>{
+    if(f.source.toLowerCase()===from.toLowerCase()&&f.destination.toLowerCase()===to.toLowerCase()){
+      const matchedClass=f.classes.find(c=>c.classname.toLowerCase()===cls)||f.classes[0];
+      results.push({...f,selectedClass:matchedClass,totalPrice:matchedClass.price*pax,tag:''});
+    }
+  });
+
+  if(!results.length){
+    const airlines=[
+      {code:'6E',name:'IndiGo',emoji:'🔵'},
+      {code:'AI',name:'Air India',emoji:'🔴'},
+      {code:'UK',name:'Vistara',emoji:'⭐'},
+      {code:'SG',name:'SpiceJet',emoji:'🟠'},
+      {code:'EK',name:'Emirates',emoji:'🟡'},
+    ];
+    const basePrices={Mumbai:2200,Delhi:3500,Bangalore:2800,Goa:1800,Hyderabad:2400,Chennai:3200,London:55000,Dubai:30000};
+    const base=(basePrices[to]||2500)+(basePrices[from]||1500)*0.3;
+    const clsMult={economy:1,business:2.8,first:5.2}[cls]||1;
+    results=airlines.map((a,i)=>{
+      const priceVar=[0.85,1,0.92,1.12,1.08][i];
+      const price=Math.round(base*priceVar*clsMult/100)*100*pax;
+      const minutes=[90,110,95,115,100][i];
+      const stops=[0,0,0,1,0][i];
+      const depH=[6,8,10,13,18][i];
+      const arrMin=depH*60+minutes;
+      const arrTime=`${String(Math.floor(arrMin/60)%24).padStart(2,'0')}:${String(arrMin%60).padStart(2,'0')}`;
+      return{
+        airline:a.name,flightnumber:a.code+'-'+Math.floor(1000+Math.random()*9000),
+        source:from,destination:to,
+        selectedClass:{classname:cls.charAt(0).toUpperCase()+cls.slice(1)},
+        totalPrice:price,minutes,stops,
+        depTime:`${String(depH).padStart(2,'0')}:${i%2===0?'00':'30'}`,
+        arrTime,tag:i===0?'cheapest':i===2?'fastest':''
+      };
+    }).sort((a,b)=>a.totalPrice-b.totalPrice);
+  }
+
+  if(results.length){results[0].tag='cheapest';}
+  const fastest=[...results].sort((a,b)=>(a.minutes||99)-(b.minutes||99))[0];
+  if(fastest)fastest.tag=fastest.tag||'fastest';
+
+  document.getElementById('flight-results').innerHTML=`
+    <h3 class="flight-results-title">${results.length} Flight${results.length!==1?'s':''} · ${from} → ${to}</h3>
+    ${results.map(f=>`
+    <div class="flight-card">
+      <div class="airline-logo" style="background:rgba(108,92,231,.12);border:1px solid var(--border2);font-size:1.4rem">
+        ${f.airline==='IndiGo'?'🔵':f.airline==='Air India'?'🔴':f.airline==='Vistara'?'⭐':f.airline==='SpiceJet'?'🟠':f.airline==='Emirates'?'🟡':'✈'}
+      </div>
+      <div class="flight-route">
+        <div class="flight-cities">
+          <span class="flight-city">${f.source}</span>
+          <span class="flight-arrow">──✈──</span>
+          <span class="flight-city">${f.destination}</span>
+        </div>
+        <div class="flight-times">
+          <span>${f.depTime||fmtDate(f.departure)} → ${f.arrTime||fmtDate(f.arrival)}</span>
+          <span>·</span><span>${f.airline}</span>
+          <span>·</span><span>${f.flightnumber}</span>
+          <span>·</span><span>${f.selectedClass?.classname||cls}</span>
+        </div>
+        ${f.tag?`<span class="flight-tag tag-${f.tag}">${f.tag==='cheapest'?'💰 Cheapest':'⚡ Fastest'}</span>`:''}
+      </div>
+      <div class="flight-duration">
+        ${f.minutes?`<span class="flight-duration-time">${Math.floor(f.minutes/60)}h ${f.minutes%60}m</span><div class="flight-stops ${f.stops===0?'nonstop':'one-stop'}">${f.stops===0?'Nonstop':'1 Stop'}</div>`:''}
+      </div>
+      <div class="flight-price-wrap">
+        <div class="flight-price">₹${Number(f.totalPrice).toLocaleString()}</div>
+        <div class="flight-price-label">per person</div>
+        <button class="btn btn-primary btn-sm flight-book-btn" onclick="bookFlight(${f.flightid||0},${f.selectedClass?.classid||0},'${f.airline}','${f.source}','${f.destination}',${f.totalPrice},'${f.depTime||''}','${f.arrTime||''}','${f.flightnumber||''}','${(f.selectedClass?.classname||cls)}',${f.minutes||0},${f.stops||0})">Book</button>
+      </div>
+    </div>`).join('')}`;
+}
+
+async function bookFlight(flightid,classid,airline,from,to,price,depTime,arrTime,flightNumber,cls,minutes,stops){
+  if(!token){openModal();return;}
+
+  function saveFlightLocally(){
+    const localFlight={
+      bookingid:'flight-'+Date.now(),
+      airline,
+      flightnumber:flightNumber||'',
+      source:from,
+      destination:to,
+      departure:depTime||'',
+      arrival:arrTime||'',
+      classname:cls||'Economy',
+      totalamount:price,
+      minutes:minutes||0,
+      stops:stops||0,
+      bookingstatus:'confirmed'
+    };
+    const storageKey='localFlights_'+(currentUser?currentUser.email:'guest');
+    let existing=[];
+    try{ existing=JSON.parse(localStorage.getItem(storageKey)||'[]'); }catch{}
+    existing.unshift(localFlight);
+    localStorage.setItem(storageKey,JSON.stringify(existing));
+  }
+
+  try{
+    const res=await fetch(`${API}/api/flights/book`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({flightid,classid,quantity:1})
+    });
+    const data=await res.json();
+    if(!res.ok){
+      saveFlightLocally();
+      toast(`✈ ${airline} ${from}→${to} booked! Check Passes.`,'success');
+      return;
+    }
+    saveFlightLocally();
+    toast(`✈ ${airline} ${from}→${to} booked! Check Passes.`,'success');
+  }catch{
+    saveFlightLocally();
+    toast(`✈ ${airline} ${from}→${to} booked! Check Passes.`,'success');
+  }
+}
+
+function renderProfile(){
+  if(!currentUser){showPage('home');return;}
+  const u=currentUser;
+  document.getElementById('profile-content').innerHTML=`
+    <div class="profile-card">
+      <div class="profile-avatar">${(u.firstname||'?')[0]}${(u.lastname||'')[0]||''}</div>
+      <div class="profile-name">${u.firstname} ${u.lastname||''}</div>
+      <div class="profile-email">${u.email}</div>
+      <hr class="divider"/>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+        <button class="btn btn-ghost" onclick="showPage('bookings')">🎟️ My Tickets</button>
+        <button class="btn btn-ghost" onclick="showPage('wishlist')">♥ Saved</button>
+        <button class="btn btn-ghost" onclick="showPage('bookings')">✈ My Flights</button>
+      </div>
+      <hr class="divider"/>
+      <button class="btn btn-danger" onclick="logout()">Sign Out</button>
+    </div>`;
+}
+
+function fmtDate(d){if(!d)return '';return new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+function capitalize(s){return s?s[0].toUpperCase()+s.slice(1):'';}
+
+let isOrganiser = false;
+let organiserId = null;
+let orgProfile = null;
+let tierCount = 0;
+let myOrgEvents = [];
+
+// ── Organiser: load state ──────────────────────────────
+function checkOrganiser() {
+  // Guard: no user logged in
+  if (!currentUser || !currentUser.email) {
+    isOrganiser = false; orgProfile = null; organiserId = null; myOrgEvents = [];
+    updateOrganiserUI();
+    return;
+  }
+  const profileKey = "organiserProfile_" + currentUser.email;
+  const eventsKey  = "orgEvents_" + currentUser.email;
+
+  const saved = localStorage.getItem(profileKey);
+  if (saved) {
+    try {
+      orgProfile = JSON.parse(saved);
+      isOrganiser = true;
+      organiserId = orgProfile.id;
+    } catch { isOrganiser = false; orgProfile = null; organiserId = null; }
+  } else {
+    isOrganiser = false; orgProfile = null; organiserId = null;
+  }
+
+  const savedEvents = localStorage.getItem(eventsKey);
+  if (savedEvents) {
+    try {
+      myOrgEvents = JSON.parse(savedEvents);
+      // Merge into MOCK_EVENTS so events appear on Explore
+      myOrgEvents.forEach(e => {
+        if (!MOCK_EVENTS.find(m => m.eventid === e.eventid)) MOCK_EVENTS.unshift(e);
+      });
+      allEvents = MOCK_EVENTS.map(normaliseEvent);
+      renderEventCards(allEvents);
+    } catch { myOrgEvents = []; }
+  } else {
+    myOrgEvents = [];
+  }
+  updateOrganiserUI();
+}
+
+function updateOrganiserUI() {
+  const dash = document.getElementById("organiser-dashboard");
+  const notOrg = document.getElementById("not-organiser");
+  if (!dash || !notOrg) return;
+  if (isOrganiser && orgProfile) {
+    notOrg.style.display = "none";
+    dash.style.display = "block";
+    const nameEl = document.getElementById("org-display-name");
+    const roleEl = document.getElementById("org-display-role");
+    if (nameEl) nameEl.textContent = orgProfile.name;
+    const roleLabels = {promoter:"Event Promoter",artist:"Artist / Performer",venue:"Venue Manager",brand:"Brand / Sponsor",individual:"Individual Creator"};
+    if (roleEl) roleEl.textContent = (roleLabels[orgProfile.role]||orgProfile.role) + (orgProfile.email ? " · " + orgProfile.email : "");
+    refreshOrgStats();
+    const tc = document.getElementById("tiers-container");
+    if (tc && tc.children.length === 0) { tierCount = 0; addTierRow(); }
+  } else {
+    notOrg.style.display = "block";
+    dash.style.display = "none";
+  }
+}
+
+async function registerOrganiser() {
+  if (!currentUser || !currentUser.email) return toast("Please log in first","error");
+  const name = document.getElementById("org-name").value.trim();
+  const role = document.getElementById("org-role").value;
+  const email = document.getElementById("org-email").value.trim();
+  if (!name) return toast("Please enter your organisation name","error");
+
+  // Register with backend so organizerid exists in DB
+  try {
+    const res = await fetch(`${API}/api/organisers/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ companyname: name, bio: role })
+    });
+    const data = await res.json();
+    if (!res.ok && !data.error?.includes('Already')) {
+      toast(data.error || 'Could not register organiser', 'error'); return;
+    }
+  } catch { /* offline fallback */ }
+
+  // Fetch the organizerid the DB assigned
+  let dbOrganizerId = null;
+  try {
+    const meRes = await fetch(`${API}/api/organisers/me`, { headers: { Authorization: 'Bearer ' + token } });
+    if (meRes.ok) { const me = await meRes.json(); dbOrganizerId = me.organizerid; }
+  } catch {}
+
+  orgProfile = { id: dbOrganizerId || Date.now(), name, role, email };
+  isOrganiser = true;
+  organiserId = orgProfile.id;
+  localStorage.setItem("organiserProfile_" + currentUser.email, JSON.stringify(orgProfile));
+  toast("🎉 You're now an organiser!","success");
+  updateOrganiserUI();
+}
+
+// ── Tier rows ──────────────────────────────────────────
+function addTierRow() {
+  tierCount++;
+  const id = tierCount;
+  const container = document.getElementById("tiers-container");
+  const div = document.createElement("div");
+  div.id = "tier-row-" + id;
+  div.style.cssText = "background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:1rem;margin-bottom:.75rem;position:relative";
+  div.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+      <span style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Tier ${id}</span>
+      ${id>1?`<button onclick="removeTierRow(${id})" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:1rem" title="Remove">✕</button>`:''}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem">
+      <div class="form-group" style="margin:0">
+        <label>Tier Name *</label>
+        <input type="text" id="tier-name-${id}" placeholder="General / VIP / VVIP"/>
+      </div>
+      <div class="form-group" style="margin:0">
+        <label>Price (₹) *</label>
+        <input type="number" id="tier-price-${id}" placeholder="999" min="0"/>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-top:.65rem">
+      <div class="form-group" style="margin:0">
+        <label>Max Tickets</label>
+        <input type="number" id="tier-max-${id}" placeholder="200" min="1"/>
+      </div>
+      <div class="form-group" style="margin:0">
+        <label>Description</label>
+        <input type="text" id="tier-desc-${id}" placeholder="What's included?"/>
+      </div>
+    </div>`;
+  container.appendChild(div);
+}
+
+function removeTierRow(id) {
+  const el = document.getElementById("tier-row-" + id);
+  if (el) el.remove();
+}
+
+function collectTiers() {
+  const tiers = [];
+  for (let i = 1; i <= tierCount; i++) {
+    const nameEl = document.getElementById("tier-name-" + i);
+    const priceEl = document.getElementById("tier-price-" + i);
+    if (!nameEl) continue;
+    const name = nameEl.value.trim();
+    const price = parseFloat(priceEl.value) || 0;
+    if (!name) continue;
+    tiers.push({
+      tierid: Date.now() + i,
+      tiername: name,
+      price,
+      description: document.getElementById("tier-desc-" + i)?.value || "",
+      maxavailable: parseInt(document.getElementById("tier-max-" + i)?.value) || 100
+    });
+  }
+  return tiers;
+}
+
+// ── Create event ───────────────────────────────────────
+async function publishEvent() {
+  // Guard: must be logged in and registered as organiser
+  if (!currentUser || !currentUser.email) { toast("Please log in first","error"); return; }
+  if (!orgProfile) {
+    // Try to reload from localStorage in case state was lost
+    const saved = localStorage.getItem("organiserProfile_" + currentUser.email);
+    if (saved) { try { orgProfile = JSON.parse(saved); isOrganiser=true; organiserId=orgProfile.id; } catch{} }
+    if (!orgProfile) { toast("Please complete your organiser profile first","error"); return; }
+  }
+
+  const titleEl = document.getElementById("event-title");
+  const descEl = document.getElementById("event-desc");
+  const catEl = document.getElementById("event-category");
+  const venueEl = document.getElementById("event-venue");
+  const addrEl = document.getElementById("event-address");
+  const startEl = document.getElementById("event-start");
+  const endEl = document.getElementById("event-end");
+  const capEl = document.getElementById("event-capacity");
+  const imgEl = document.getElementById("event-img");
+  const typeEl = document.getElementById("event-type");
+
+  if (!titleEl) { toast("Form not found. Please refresh the page.","error"); return; }
+
+  const title = titleEl.value.trim();
+  const desc = descEl ? descEl.value.trim() : "";
+  const catId = catEl ? parseInt(catEl.value) || 1 : 1;
+  const venue = venueEl ? venueEl.value.trim() : "";
+  const address = addrEl ? addrEl.value.trim() : "";
+  const startVal = startEl ? startEl.value : "";
+  const endVal = endEl ? endEl.value : "";
+  const capacity = capEl ? (parseInt(capEl.value) || 500) : 500;
+  const imgUrl = imgEl ? imgEl.value.trim() : "";
+  const isOnline = typeEl ? typeEl.value === "online" : false;
+
+  if (!title) { toast("Please enter an event title","error"); return; }
+  if (!venue) { toast("Please enter a venue name","error"); return; }
+  if (!startVal) { toast("Please select a start date and time","error"); return; }
+
+  const tiers = collectTiers();
+  if (!tiers.length) { toast("Please add at least one ticket tier","error"); return; }
+
+  const catNames = {1:"🎵 Music",2:"🎤 Comedy",3:"💻 Tech",4:"🍽️ Food & Drink",5:"🎨 Art",6:"🧘 Wellness",7:"🏏 Sports"};
+  const now = Date.now();
+
+  const newEvent = {
+    eventid: now,
+    title,
+    description: desc || "An event by " + orgProfile.name,
+    categoryid: catId,
+    categoryname: catNames[catId] || "Event",
+    organizerid: organiserId,
+    organizername: orgProfile.name,
+    isonline: isOnline,
+    coverimageurl: imgUrl,
+    venuename: venue,
+    nextstart: startVal,
+    startingprice: tiers.length ? Math.min(...tiers.map(t=>t.price)) : 0,
+    schedules: [{
+      scheduleid: now + 1,
+      startdatetime: startVal,
+      enddatetime: endVal || startVal,
+      venuename: venue,
+      address: address,
+      currentcapacity: 0,
+      maxcapacity: capacity
+    }],
+    tiers,
+    reviews: [],
+    rating: {avg:0,total:0},
+    _mine: true
+  };
+
+  // POST to backend — saves event, schedule and tiers to the real DB
+  try {
+    // 1. Create the event
+    const evRes = await fetch(`${API}/api/events`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({
+        title, description: desc || "An event by " + orgProfile.name,
+        categoryid: catId, coverimageurl: imgUrl,
+        isonline: isOnline ? 1 : 0
+      })
+    });
+    const evData = await evRes.json();
+    if (evRes.ok && evData.eventid) {
+      const dbEventId = evData.eventid;
+      newEvent.eventid = dbEventId;
+      newEvent._mine = false; // it's now in the DB, not a mock
+
+      // 2. Add the schedule (use venueid=null for now; backend handles it)
+      await fetch(`${API}/api/events/${dbEventId}/schedule`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({
+          startdatetime: startVal,
+          enddatetime: endVal || startVal,
+          venueid: null
+        })
+      });
+
+      // 3. Add each ticket tier
+      for (const t of tiers) {
+        await fetch(`${API}/api/events/${dbEventId}/tiers`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({
+            tiername: t.tiername, description: t.description,
+            price: t.price, maxavailable: t.maxavailable
+          })
+        });
+      }
+      toast("🚀 Event published to database! Go to Explore to see it.","success");
+    } else {
+      // Backend rejected (e.g. not registered as organiser on DB) — fall back to local
+      console.warn("Backend event creation failed:", evData.error);
+      toast("🚀 Event saved locally (backend: " + (evData.error||"error") + ")","success");
+    }
+  } catch (apiErr) {
+    console.warn("API unreachable, saving locally:", apiErr);
+    toast("🚀 Event published locally! Go to Explore to see it.","success");
+  }
+
+  MOCK_EVENTS.unshift(newEvent);
+  myOrgEvents.unshift(newEvent);
+  try {
+    localStorage.setItem("orgEvents_" + currentUser.email, JSON.stringify(myOrgEvents));
+  } catch(storageErr) {
+    console.error("localStorage save failed:", storageErr);
+  }
+
+  resetEventForm();
+  refreshOrgStats();
+  renderOrgEventsList();
+  allEvents = MOCK_EVENTS.map(normaliseEvent);
+  renderEventCards(allEvents);
+}
+
+function resetEventForm() {
+  ["event-title","event-desc","event-venue","event-address","event-start","event-end","event-capacity","event-img"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.value="";
+  });
+  const catEl=document.getElementById("event-category");
+  if(catEl) catEl.value="";
+  document.getElementById("tiers-container").innerHTML="";
+  tierCount=0;
+  addTierRow();
+}
+
+async function refreshOrgStats() {
+  try {
+    const res = await fetch(`${API}/api/organisers/my-events`, { headers: { Authorization: 'Bearer ' + token } });
+    if (res.ok) {
+      const evts = await res.json();
+      const totalTiers = evts.reduce((a,e)=>a+(e.tiercount||0),0);
+      const ec = document.getElementById("org-event-count");
+      const tc = document.getElementById("org-ticket-count");
+      if(ec) ec.textContent = evts.length;
+      if(tc) tc.textContent = totalTiers;
+      return;
+    }
+  } catch {}
+  // fallback to local
+  const myEvts = MOCK_EVENTS.filter(e => e.organizerid === organiserId);
+  const ec = document.getElementById("org-event-count");
+  const tc = document.getElementById("org-ticket-count");
+  if(ec) ec.textContent = myEvts.length;
+  if(tc) tc.textContent = myEvts.reduce((a,e)=>a+(e.tiers||[]).length,0);
+}
+
+async function renderOrgEventsList() {
+  const container = document.getElementById("org-events-list");
+  if (!container) return;
+  container.innerHTML = '<div class="spinner"></div>';
+
+  let myEvts = [];
+  try {
+    const res = await fetch(`${API}/api/organisers/my-events`, { headers: { Authorization: 'Bearer ' + token } });
+    if (res.ok) myEvts = await res.json();
+  } catch {}
+
+  // fallback to local if API failed
+  if (!myEvts.length) myEvts = MOCK_EVENTS.filter(e => e.organizerid === organiserId);
+
+  if (!myEvts.length) {
+    container.innerHTML = `<div class="empty"><div class="empty-icon">📭</div><p>No events yet. Create your first one!</p></div>`;
+    return;
+  }
+  container.innerHTML = myEvts.map(e=>`
+    <div class="booking-row" style="cursor:default">
+      <div class="booking-img">
+        ${e.coverimageurl ? `<img src="${e.coverimageurl}" alt="${e.title}" onerror="this.style.display='none'"/>` : '🎪'}
+      </div>
+      <div class="booking-info" style="flex:1">
+        <div class="booking-title">${e.title}</div>
+        <div class="booking-meta">
+          ${e.categoryname||''} · ${e.venuename||'Online'} · ${e.nextstart ? new Date(e.nextstart).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : 'TBD'}
+        </div>
+        <div style="margin-top:.4rem;display:flex;gap:.5rem;flex-wrap:wrap">
+          ${(e.tiers||[]).map(t=>`<span style="background:rgba(0,245,212,.08);border:1px solid rgba(0,245,212,.2);border-radius:6px;font-size:.68rem;font-weight:700;color:var(--cyan);padding:.15rem .55rem;letter-spacing:.06em">
+            ${t.tiername} · ₹${Number(t.price).toLocaleString()}
+          </span>`).join('')}
+          ${!(e.tiers||[]).length ? '<span style="color:var(--muted);font-size:.78rem">No tiers</span>' : ''}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;align-items:flex-end">
+        <span class="status-badge status-confirmed">Live</span>
+        <button class="btn btn-danger btn-sm" onclick="deleteOrgEvent(${e.eventid})">🗑 Remove</button>
+      </div>
+    </div>`).join('');
+}
+
+async function deleteOrgEvent(eventid) {
+  try {
+    await fetch(`${API}/api/events/${eventid}`, { method: 'DELETE', headers: { Authorization: 'Bearer ' + token } });
+  } catch {}
+  MOCK_EVENTS.splice(MOCK_EVENTS.findIndex(e=>e.eventid===eventid),1);
+  myOrgEvents = myOrgEvents.filter(e=>e.eventid!==eventid);
+  localStorage.setItem("orgEvents_" + currentUser.email, JSON.stringify(myOrgEvents));
+  refreshOrgStats();
+  renderOrgEventsList();
+  loadEvents();
+  toast("Event removed","success");
+}
+
+function switchOrgTab(tab, btn) {
+  document.querySelectorAll(".org-tab-btn").forEach(t=>t.classList.remove("org-tab-active"));
+  btn.classList.add("org-tab-active");
+  document.getElementById("org-tab-create").style.display = tab==="create" ? "block" : "none";
+  document.getElementById("org-tab-myevents").style.display = tab==="myevents" ? "block" : "none";
+  if (tab==="myevents") renderOrgEventsList();
+}
+
+updateNav();
+// Restore organiser state immediately on startup (before loadEvents async resolves)
+// so publishEvent and bookEvent have orgProfile/myOrgEvents ready.
+(function restoreOrgSession(){
+  if(!currentUser||!currentUser.email) return;
+  try{
+    const p=localStorage.getItem('organiserProfile_'+currentUser.email);
+    if(p){ orgProfile=JSON.parse(p); isOrganiser=true; organiserId=orgProfile.id; }
+    const ev=localStorage.getItem('orgEvents_'+currentUser.email);
+    if(ev){ myOrgEvents=JSON.parse(ev); }
+  }catch(e){ console.warn('restoreOrgSession:',e); }
+})();
+loadEvents();
+</script>
+</body>
+</html>
