@@ -1,7 +1,0 @@
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=Pat@2846
-DB_NAME=event_lifestyle_db
-JWT_SECRET=Aaryu@2846
-PORT=5000
